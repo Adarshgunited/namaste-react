@@ -1,0 +1,88 @@
+npm - does not stand/acronym for node package manager, it is a package manager. behind the scene it  does manage the node packages.
+npm consist of a lot of packages and it install and manages all the packages. 
+
+run cmd : npm init - (package.json is created)
+
+when we write create-react-app, behind the scene it uses the webpack bundler and babel is included.
+
+note : package.json is a configuration for npm. the package is also known as dependencies.
+npm take care of the versions and is present in the package.json.
+
+note : package in our project is also called Bundler. 
+A bundler is used to bundle or package our apps. different bundler are webpack, parcel, vite,etc..
+at the end of the day all bundler are same. we r going to use parcel . 
+parcel is a library. it comes in a node package.
+
+cmd install = npm install -D parcel (-D is (- means flag) for dev dependencies)
+two types of dependencies : 1. dev dependencies 2. normal dependencies
+1. dev dependencies are required in development phase 
+2. normal dependencies are used in normal phase.
+parcel is a beast. (it will give muscle, strength,etc)
+"parcel": "^2.11.0" : the ^ is a caret symbol. its basically update the parcel automatically if any new minor update is available. ~ is a tilde symbol. it basically used to update the major parcel update by automatically (prefer caret over tilde for no future problems).
+
+react install cmd : npm i react react-dom
+
+package.json is a config for npm.
+package-lock.json basically lock the version of the packages or dependencies.
+the package.json keeps an approx version, while package-lock.json is an exact version.
+node module contains all the code and dependencies that are fetched from the npm.
+node module is kind of a database used for our project and is fetched from npm.
+
+transitive-dependencies - dependencies contain other dependencies and other dependencies contain other dependencies. and also every packages has its own package.json . every dependencies has its own package.json.
+
+parcel uses babel, a lot of dependencies, and many more etc,.
+
+package.json is a configuration for our npm.
+node modules : it is a collection of dependencies.
+we have a lot of package.json for every dependencies and have only one package-lock.json(present in main file)
+
+we should not push node_modules on git (its bad way of putting it on git). we can regenerate by using npm install cmd but should have this files i.e package.json and package-lock.json.
+
+.gitignore file : if we don't want to push some file during production, then we should include it here.
+
+we make .gitignore and put node modules, because we can install it at any time from the server.(for including our node modules in .gitignore file we write  this : /node_modules).
+.gitignore contains all the files which we don't want to push on github.
+
+we should put package.json and package-lock.json in git, so that the server can fetch dependencies and what our project should have needed packages and dependencies. if anyone needed.
+
+if we have package.json and package-lock.json, then we can re-create our node_modules.(that's why we should not push node modules on git).
+
+what ever we can re-generate, we should not put it on git.
+package.json has config and versions.(minor or major updates) While exact version is in package-lock.json.
+
+we r building our app using parcel  (igniting our app)
+
+Let's see what parcel do...
+cmd to execute/run parcel : npx parcel index.html 
+the above cmd will create a server and host our app by using the parcel bundler.
+to run server : npx parcel index.html
+
+note : u have to make your entry point as index.html and not app.js. go and change it in your package.json if it is present as app.js (create problems so be cautious).
+
+(npm means we r installing while npx means we are executing )
+
+import React from "react" (node modules contain our react dependency).
+
+we have to write script tag mein module so that our import and export should work. if we don't write type as module then script will treat App.js file as normal js code that does not support import/export. <!-- <script type="module" src="App.js"> -->
+after above line our, react will get import react from node_modules.
+
+while using parcel, to update our page ..
+we have to save our app and it uses hmr(hot module replacement) and is also using a file watching algorithm - written in c++.
+
+parcel is fast because it has .parcel-cache folder. whenever we save our file our changes time will reduce and data will be render fast due to the folder present(is created when we install parcel).
+parcel is like a manager. it contains and uses library, etc...
+parcel advantages u can learn on websites.
+parcel build cmd : npx parcel build index.html, after this cmd a dist file will be created in that our build files are present. we have 3 files and many more and the 3 files are index.html, index.css, index.js, etc., when we build our app using parcel build cmd. all the html/css/js files are combined and this 3 files are generated.
+
+browserList is a tool that is used to check our app should work on as many browser as possible.
+
+we write it in our package.json at bottom 
+browsersList website we have to check the version and write cmd like :  
+"browsersList"[
+    "last 2 Chrome version",
+    "last 2 Firefox version"
+  ]
+
+react is making our app fast yes but their are many more things such as bundlers and many more are their that help to make our react fast.
+
+
