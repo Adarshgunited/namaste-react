@@ -1,0 +1,212 @@
+part-1
+
+monolith and microservices architecture.
+
+traditionally, the app developed are based on monolith. means all the files are present in one folder. eg: ui, auth, DB, etc, are all backend and frontend are in one place.
+
+microservices - all files are having a different folder. it has separation of concern.
+single responsible principle. now we use microservices as the latest practice. we can work on any stack/files/field as we want and it does not depend/obstruct for others.
+
+part-2
+
+how web app or react app fetch data from api ?
+their are 2 ways.
+1st way : Loads->API(500ms)->render.
+2nd way : Loads->Render->API->re-render.
+In react, we will be using 2nd approach. This is a better approach, Better UX experience.
+NOTE : React render-cycle are very fast.....
+
+UseEffect - its a utility fn.( basically it is a normal js function)
+UseEffect is a function. It takes 2 argument. 1st one is a callback fn. 2nd one is a dependency array. the callback fn will be called after our component is rendered.
+
+the UseEffect run after the component has rendered. we call fetch data function in UseEffect and in that fetchData fn we have our API. we use a method called as 'fetch()' method to fetch data from the API. this method is given by the browser.
+fetch() - a super power which js engine has.
+
+fetching logic of react is same as js.
+The fetch method will fetch data from api.
+the fetch will return a promise. prefer using async and await.
+then we will convert the data into json format.
+useEffect(()=>{fetchData()},[]);
+
+const fetchData = async() => {
+const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.5203896&lng=73.8567005&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
+
+const json = await data.json();
+}
+
+what is cors policy ?
+watch on yt (cors by akshay saini);
+
+Access to fetch at 'https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.5203896&lng=73.8567005&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING' from origin 'http://localhost:1234' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+
+to solve the above problem, install cors extension from the google extension web store.
+now we will get our real data from the swiggy api.
+
+as soon as we get the real data from the swiggy api, we will update the listOfRestaurants by using real data. as soon as my listOfRestaurants update, react will re-render this component.
+
+how to get anyone's api online ?
+to get any website api online, is by going to inspect, then go to the network and in it select the Fetch/XHR option and do refresh, u will see data at left bottom corner. go and search for the api by opening it in new tab and copy the url.
+
+optional chaining in js - ? (google it)
+Optional chaining is a feature in JavaScript that allows you to access properties or methods of an object without explicitly checking if each level of the object exists. It's a concise way to handle cases where some properties in a chain may be null or undefined.
+
+// Without optional chaining
+const city = person && person.address && person.address.city;
+// With optional chaining
+const city = person?.address?.city;
+In the example above, person?.address?.city is using optional chaining. If person, person.address, or person.address.city is null or undefined at any point, the expression short-circuits, and city becomes undefined.
+
+It's a good way of handling the data by using the optional chaining.
+example : setListRestaurant(json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+
+part - 4
+
+re-render will take some time, it will fetch data from the api and then it will re-render the real data. it will make a bad UX. So, we will make a loader, while are data will take time to re-render.
+
+is showing the Loader/spinner is a good way in latest practice ? 
+answer is no. we should use Shimmer UI.
+A shimmer screen is a version of the UI that doesn’t contain actual content. Instead, it mimics the page’s layout by showing its elements in a shape similar to the actual content as it is loading and becomes available.
+
+//conditional rendering - it means that if some condition is true then only render the component/data.
+if(listOfRestaurant.length === 0){return <Shimmer/>}
+
+part - 5
+
+why we use local variable in useState ? why we have useState ? why, when and how we use it ?
+Using local variables (state variables declared with useState) allows you to manage the state of your component independently, keeping the logic modular and focused within the component's scope.
+In functional components, which are simpler and more modern than class components, there was initially no built-in way to manage state. useState was introduced to fill this gap.
+Use useState whenever you need to manage state within a functional component. This could be for handling user interactions, form input, or any other dynamic behavior.
+
+<button className="login">Login</button>
+as soon as we click our button, our button Login keyword should change to LogOut. we want our button to be dynamic.
+
+let btnName = "Login";
+
+<button className="login" onClick={()=>{
+                    btnName = "LogOut"
+                    console.log(btnName);
+                }}>{btnName}</button>
+Console : LogOut .
+
+when we click on the login button, our UI does not changes. when we do console.log(btnName), we can see the  variable does have change. but it does not show/affect the UI. This is why Js variable does not work in such cases. so if u want to make your component dynamic. or u want to change something on your component, then we use local state variable.
+here is where, useState state variable comes into picture. 
+
+useState comes from react package present in node_modules and is a named import.
+const [btnNameReact,setBtnNameReact] = useState("Login");
+<button className="login" onClick={()=>{
+                    btnNameReact=="Login"?
+                    setBtnNameReact("Logout") :
+                    setBtnNameReact("Login");
+                    console.log(btnNameReact);
+                }}>{btnNameReact}</button>
+
+the btnNameReact behave like a normal js variable. but it's a special local variable. we cannot directly modify our btnNameReact. so we have to use a 2nd parameter.(the useState gives us the function which will update the btnNameReact). if we want to update the btnNameReact then, we will be going to use setBtnNameReact. so, we will call the setBtnNameReact function with the updated value. and our btnNameReact will update to Logout.
+
+why react has to do all this, why use btnNameReact, setBtnNameReact, why not only simple js variable btnName?
+answer : so, when we have just the normal js variable, let btnName = "Login";
+so their is no way for react to have a track of the variable btnName is updated or not. if we change btnName from onClick handler, react will not know anything. but because the btnNameReact is special state variable which react keeps track. to update the btnNameReact, we have to use the setBtnNameReact fn. when setBtnNameReact will trigger, then our component will re-render.
+It trigger the reconciliation process. it takes a millisecond to update the header/component.
+
+IMPORTANT : question : is it rendering the whole header or only the btnNameReact changes ? 
+answer : it re-render the whole header.
+console.log("re-render that whole header/component if state changes")
+
+When a state variable changes in a React component, the default behavior is to re-render the entire component. React optimizes this process through a mechanism called Virtual DOM, which efficiently updates only the parts of the actual DOM that changed.
+Reconciliation Algorithm:
+React uses a reconciliation algorithm to determine what parts of the Virtual DOM need to be updated based on changes in state or props. It tries to update only the parts that have changed rather than re-rendering the entire component tree.
+
+NOTE : whenever our state variable changes using setBtnNameReact then, react will re-render that whole component.
+
+question : const [btnNameReact,setBtnNameReact] = useState("Login");
+if the btnNameReact is a const variable, why and how a const variable is modifying or updating? is it breaking the const principle? how this setBtnNameReact change this btnNameReact variable to Logout? HOw?
+answer : whenever we update the value of btnNameReact variable, using the setBtnNameReact fn. then, react is updating the btnNameReact state variable value and is calling that header function/component once again. it is basically rendering.(calling the function is equivalent to rendering the component). but this time, when we invoke the function, the btnNameReact variable value is the new value than it was before. this is the beauty of react. react is keeping the track of everything. a new instance of btnNameReact variable is created by setBtnNameReact calling/invoking. now, when the btnNameReact variable is created, it is created with the new value(Logout) and not with the default value(Login). 
+
+what happen behind the scene, is that as soon as we call the setBtnNameReact fn, it update the btnNameReact variable value/reference,and then it will render the header component once again. It will find the diff between older version and the newer version and it will see in that diff only the button is updated. this is happening with diff algorithm. this is the reconciliation process. this is why the react is fast. the changes happen very fast and is dynamic. every time we click on the button the reconciliation process is trigger. bts a lot of process is happening. 
+
+When you call setCount(1), React internally manages the state change. It updates the value associated with count without reassigning the constant variable count. Behind the scenes, React uses a mechanism to keep track of state changes and efficiently update the Virtual DOM.
+The constant nature of the variable does not mean the state cannot change; it means you cannot directly reassign a new value to the variable using the = operator.
+The state variable (count) refers to the same variable in memory across renders.
+The value of the state variable may change during a re-render when the state is updated using the setter function.
+React's efficient reconciliation process ensures that only the necessary changes are applied to the Virtual DOM during updates.
+part - 6
+
+let's build search bar .
+
+//searchText variable will get data from the search input box (bind the searchText with input box)
+    const[searchText, setSearchText] = useState("");
+
+<div className="search">
+                    <input type="text" className="search-box" value={searchText}/>
+                    <button onClick={()=>{
+                        //Filter the restaurant cards logic and update the UI
+                        //search text
+                    }}
+                    >Search</button>
+                </div>
+
+So, onClick we will write our logic. we will need the search text value from the input box to the onClick fn button. so we will have a value attribute in input box. we have to bind the input box to a local state variable. to track the value of the input box, whatever the user is typing in the input box. we have to bind the value of input box with our state variable.
+
+now, when we type in the input box. it does not work. it does not take any input in the box. why input box is not working. so the answer is we have bind the value to the searchText. and the searchText over here is bind to the input box. it means, whatever will be inside this variable searchText that will be inside this input box. when we r changing/typing on the input box. the value of input box is still tied/bind to the searchText.
+so my searchText is not updated when we were changing/typing on the input box because it is bind with the searchText state variable value initialize with empty string. this cannot happen .So, we will write a onChange handler. the onChange fn should update our searchText. update with the new value. we will get the new value by using the callback method on onChange. 
+
+how will i get the new value ? 
+answer : onChange={(e)=>{setSearchText(e.target.value); }}
+In React, the onChange event is a commonly used event handler that's used to capture and respond to changes in the value of form elements like input fields, select dropdowns, and text areas. It's similar to the onChange event in vanilla JavaScript, but in React, it's typically used within the context of managing state.
+
+<input type="text" className="search-box" value={searchText}/>
+
+const[searchText, setSearchText] = useState("");
+
+to make the input box work ?
+1st of all, we have to tied/bind( means we will give value={searchText} to a local state variable with an empty string) the input box value attribute with the searchText state. now when we will type on the input box, as soon as our input box changes. we want to update our searchText. the input value is capture by onChange eventHandler.
+so when we type on the input box, the searchText will be update for every single word. so, our react is re-rendering our component for every single change happen on the local state variable change.
+
+NOTE : whenever u change a local state variable, react re-render the component.
+
+<input type="text" className="search-box" value={searchText}
+                    //it will take the input value from the input box and will change the searchText to that new value.
+                     onChange={(e)=>{
+                        setSearchText(e.target.value);
+
+                    }}/>
+//HERE the body is re-rendering again and again. if our searchText is changing.(trigger reconciliation cycle and is finding the diff between older virtual dom and new virtual dom)
+
+virtual dom is the actual representation of the jsx(actual dom).
+
+react has fast reconciliation and rendering.
+
+includes() - a js function used to search the word/text/variable includes or not and is case sensitive.
+listOfRestaurant.filter((res)=> res.data.name.includes(searchText));
+
+<button 
+                    //
+                    onClick={()=>{
+                        // console.log(searchText)
+                        //Filter the restaurant cards logic and update the UI
+                        //search text (includes() js method used to see the searchText in the res.data.name)
+                        const filteredRestaurant = listOfRestaurant.filter((res)=> res.data.name.toLowerCase().includes(searchText.toLowerCase()));
+                        
+                        //filtered restaurant updated
+                        setListOfRestaurant(filteredRestaurant);
+                    }}
+                    >Search</button>
+
+ our searchText should be identical with our listOfRestaurant name. then only we will get the filteredRestaurant. to solve the problem, convert both in toLowercase.
+
+ bug : if we do filteredRestaurant, then we will be having some filteredRestaurant cards only and the previous restaurant cards will be lost or not able to get, if we again use filter on the component then we will be having only the filteredRestaurant data and not all the listOfRestaurant. how to solve the problem ?  
+
+part - 7
+
+so the solution is by creating a copy/instance. we create a local state variable as filteredRestaurant. setFilteredRestaurant fn is to set the filteredRestaurant by the filter cards logic and update the UI. 
+
+learn Lazy Loading. (while we scroll, out data will be fetched and display)
+
+how to solve CORS plugin problem ? 
+to solve the above problem, we should visit the website called as "corsproxy.io". It help to bypass the cors problem.
+
+what is cors ? 
+so, when u make an api call from one origin to different origin. means one domain to another domain. for simple understanding, u r trying to make an api call from localhost to swiggy.com api so the browser does not allow us to do it. (example : akshaySaini.in to swiggy.com api)
+
+we have to copy the url and paste it just before our api url.
+
+completed

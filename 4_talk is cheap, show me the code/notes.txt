@@ -1,0 +1,1 @@
+from here onward, we have started our food project, u should visit notes of 4 episode(talk is cheap, show me the code) in the notes folder and u can visit the food project for better understanding of notes and codes.

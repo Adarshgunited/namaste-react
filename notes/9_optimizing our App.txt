@@ -1,0 +1,92 @@
+part - 1
+
+Custom hooks.
+Single Responsibility Principle(CSE part)
+the SRP means that suppose u have a fn, or a class, or any single identity of your code that should have a single Responsibility.(example : restaurant card job is to display card, etc)
+So, similarly for each component we have created, we should give it a single Responsibility and we should not do a lot of things/work in our component. if u r doing multiple things in your single/same component then u should just break it down into different component. so, this is a good way of maintaining code in a modular fashion.
+
+So, modularity means u break down your code into different small modules. So that your code become more maintainable, testable, reusable, etc. 
+
+Hooks are normal utility/helper fn.
+
+part - 2
+
+Creating a custom hook is not mandatory. but by creating a custom hook, u will make your code more readable, modular, maintainable, reusable, etc..
+
+RestaurantMenu component has 2 major Responsibility that is 1st fetching the menu data from the api and 2nd is displaying the data on the UI. So, the RestaurantMenu component should be concern with only displaying the menu data on the UI and should not worry were the data is coming from. how the data is coming from. what is that api has been used/call. It is not worrying. 
+
+Let's take an example of using the useParam hook. So, the useParam hook gives the resId. we don't know what is the code written bts. we don't know how the useParam is getting the parameter. their will be some code that will be written bts for useParam that will go check the url, check the resId(dynamic Id) and extract and give it to the variable(resId). we r not bother about the implementation of the hook. 
+
+so, can we create a custom hook, that will be used to fetch the data. Now, let's create a useRestaurantMenu() custom hook to fetch the restaurant menu data. In the useRestaurantMenu we will pass the resId and some how it will fetch the data and give to the component.(here how to get the data is abstracted) 
+
+we will create our hooks in utils folder(convention is that prepare a separate file for hooks). when we create a custom hook file, we have to start the naming with the same name as hook. the use word should be in small letter. the react understand that the use word used is a custom hook.
+
+the useRestaurantMenu hook will take the resId and will return the restaurant menu information. the export and import will be same as the functional component. the fetchData will be same way as we have done in useEffect before. 
+
+part - 3
+
+NOte : while creating custom hook, u should know the input and output of the hook. In useRestaurantMenu we have input as resId and output as resInfo. the output here is a normal state variable.
+
+Let's build an online/offline feature. we create a custom hook, useOnlineStatus.js. 
+In useOnlineStatus we don't need any input. the return will be 'return onlineStatus(boolean value)'. to check we are offline/online we will be using an eventListener, i.e 'online' event. the browser give access to the window object and the window object has this online eventListener. 
+the online eventListener will keep a track of offline/online and this super power is given by the browser through window object. we should add one eventListener and we use useEffect with empty dependency array. 
+
+So, we create a state variable i.e const [onlineStatus, setOnlineStatus] = useState(true); and this onlineStatus variable will keep a track of 'if my internet is working' then 'true' else 'false'. let's use this useOnlineStatus by showing some message, anything in the Body.js component after the useEffect.  
+
+//custom hook(check oneLine)
+    const onlineStatus = useOnlineStatus();
+    if(onlineStatus === false)
+    return <h1>Look's like you're offline!!! Please check your internet connection.</h1>
+
+let's create a feature of onlineStatus with symbol in body.js.
+    const onlineStatus = useOnlineStatus();
+    <li>Online:{onlineStatus?"Yes":"No"}</li>
+
+part - 4
+
+why creating a custom hook, is it mandatory to use the keyword 'use' as a prefix for the hook ? NO, it is not mandatory but react docs say u should use the prefix 'use'. it's a convention, good practice. if someOne see's the word use then he/she will understand it is a custom hook.
+
+what is linter ? (google it)
+
+part - 5
+
+lazy loading
+Chunking 
+Code Splitting
+dynamic Bundling
+to break down your app into smaller logical chunk.
+
+//Chunking
+//Code Splitting
+//Lazy Loading
+//on demand loading
+//dynamic import
+Swiggy has Swiggy and instamart. the swiggy has js file bundler and instamart has js file bundler.
+
+we will create a grocery.js in our component
+So, the grocery page  will be displayed by using lazy loading.(on demand loading)
+so when we see our code in the js bundle(to see this u have to go to the network then go to JS and then preview. u will see the grocery component written in one js file.) 
+So now i want to logically distribute my application so that my grocery and all the component of grocery should come from a different bundle. so wherever we are using the grocery component we will be using it by doing lazy loading.
+
+lazy loading - so when our app will load initially, the home page code will be load and when we go to the grocery by using the link then our grocery code will be load.(also known as on demand loading).
+we will not do normal js functional import for grocery. we will load/get our grocery by using lazy fn provided by react and is a named import. it takes a callback fn. in callback fn we write import and inside import we write the path.
+
+now when we see in the network, then go for js and see we have got a Grocery file created. we can see it in dist folder also some grocery files are created.
+now we have created two bundler by using lazy.
+
+const Grocery = lazy(()=> import("./components/Grocery"));
+
+when we go to grocery link, we got error : something written : A component suspended while responding to synchronous input.
+the error is because the grocery code takes 12ms to come to the browser. react is very fast. react try to load the grocery component. but the code was not their. this is  why react suspended the rendering and throw error. to tackle this problem react gives us 'Suspense'. use it in our route path(root file/app.js).
+
+the Suspense is a component given by react. we should wrap our component(grocery which is not available at the moment) with the Suspense component and give it a fallback(placeholder). in fallback we pass a jsx. we can pass shimmer ui/tag/loading screen. lazy loading very important and powerFull.
+{
+            path:"/grocery",
+            element:<Suspense fallback={<h1>Loading...</h1>}><Grocery/></Suspense>
+        }
+
+lazy loading : distribute our code into different chunks.(also called dynamic import/on demand loading)
+
+bloading/bundle size increase (google it)
+
+completed

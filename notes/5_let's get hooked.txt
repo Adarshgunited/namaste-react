@@ -1,0 +1,124 @@
+part - 5
+
+the beauty of framework or library is to make our life easy and simple...
+we make component for every part of the UI.
+
+episode - 1
+
+why we create src folder ? 
+It is an industry standard way. In src, we have our source code.
+
+we should structure our app. we should have components folder in our src folder.
+
+React does'nt have file structure. u can keep any file structure as u wish.
+Avoid too much nesting.
+
+if a single file has more components, we should restructure and make every component's file.
+
+whenever u create a file, try to name the component as same as file. (file 1st word should be capital)
+
+some people write jsx as an extension for react file.
+what is the good way ? u can follow any ways no problems.
+keep your code as simple as u can.
+
+if we have many components in a single file then, 1st we have to export them and then import them.
+
+export default Header;
+import Header from "./components/Header";
+import Header from "./components/Header.js";
+both import work u can use anyone (prefer 1st that is ./components/Header).
+
+industry standard ...
+whenever u have any hard-coded data, u should not put it in your components file. we should create and keep it inside a folder utils/common/config, any name u can give. and create a constants.js file.
+In constants.js file, its a good habit to name the constants i.e variable as UpperCase and follow (snake-case : _ ). example : CDN_URL , LOGO_URL , E_TC,.
+
+we have two types of export : 
+1. default export ;(in one file we have only one)
+2. name export ;(export variableName, in one file we can have more than one)
+
+1. default export/import
+export default ComponentName;
+import component from "path";
+
+2. Named export/import
+export const ComponentName = () => {};
+import {Component} from "path";
+
+if we have to export multiple things, then we use name export. when we import it, it's a slight different. whenever we have to import any name export we have to do like this : import { CDN_URL , LOGO_URL } from "../utils/constants";
+if we have to access the name import then we have to use curly braces. src={LOGO_URL}
+
+can u use default and Named export same time in a file ? (google it)
+Yes, you can use both named exports and a default export in the same file in React (and JavaScript/ECMAScript in general). This is a common practice, especially when you have a module that exports a main functionality as the default export and some additional functionalities as named exports.
+// MyComponent.js
+// Named export
+export const myFunction = () => {
+  console.log('This is a named export function.');
+};
+// Named export
+export const anotherFunction = () => {
+  console.log('This is another named export function.');
+};
+// Default export (a React component in this case)
+const MyComponent = () => {
+  return <div>This is a default export React component.</div>;
+};
+export default MyComponent;
+
+part - 2
+
+React is fast in Dom manipulation.
+react try to solve the problem of our UI layer and Data layer should be synced. 
+
+React Hook.
+State Variable - a super powerful Variable.
+
+what is a react Hook ? 
+It's a normal js utility functions.
+their are 2 very important hooks.
+1.useState()
+2.useEffect()
+
+useState - use to create super powerful state variable in react.
+we have to import useState as Named import.
+It maintain the state variable. 
+
+a local state variable scope is inside the Component, if defined in the component.
+whenever we call a useState hook, it return a state variable and a set function to set the state variable, we receive it inside an array.
+
+//local state variable - super powerful variable
+const [listOfRestaurant, setListOfRestaurant] = useState();
+
+//normal js variable
+let listOfRestaurant = [];
+
+set word is industry standard convention.
+setListOfRestaurant is used to update our listOfRestaurant. eg : setListOfRestaurant(filterList);
+
+NOTE : whenever a state variable changes / update, react will re-render that whole component.
+
+react is only good at dom manipulation.
+
+important (behind the scene)
+React uses reconciliation algorithm.( also known as react fiber - react16 mein comes)
+dom is like a tree.
+
+actual dom are the tags which are present in html format.(eg : <div><div><img></div></div>)
+virtual dom : it is a representation of our actual dom.(it is basically nothing but a js objects)
+
+example : suppose, we have a restaurant-container. in that we have 7 restaurant-cards. if my UI changes by using filtering logic from 7 cards to 3 filtered restaurant-card.
+react create a virtual dom by using actual dom .
+it does not touch/changes the actual dom right now. 
+
+basically, if any changes happen, we will have an old virtual dom and the new virtual dom is created (changes happened) then, the react uses diff algorithm and find the difference and apply it on the actual dom.
+It's the react core algorithm also called as reconciliation. (this is why react is more popular after react16).
+
+react doing efficient dom manipulation. (it has a virtual dom). virtual dom is famous due to react.
+
+basics :
+const [listOfRestaurant,setListOfRestaurant] = useState(resList);
+can be convert to basically :
+const arr = useState(resList);
+const listOfRestaurant = arr[0];
+const setListOfRestaurant = arr[1];
+
+completed

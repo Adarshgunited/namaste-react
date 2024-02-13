@@ -1,0 +1,223 @@
+to execute our project use cmd : npx parcel index.html
+now this will create a development build sever for us and it will host our app on our localhost 1234.
+
+to make our life easy lets create a script so that we should not have to write regularly "npx parcel index.html" 
+
+we will create a script in our package.json and then we will use "npm script" as a cmd.
+
+how to create a script :
+in our package.json we have a scripts : in that we will create our script.
+see it in our 2_Igniting our app file mein see package.json and in that go to script.
+see cmd below : 
+"scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html",
+    "test": "jest"
+  },
+
+we have created two script. one is start script, 2nd is build. 
+for industry standard, we have to follow/use npm so our cmd is "npm script(u have created / default)".
+
+note : if u want to run or start the project of anyone then, go to the package.json and in it go to the script tag and u will find the start, build and other cmd, etc script to run, build the project.
+
+cmd to run/start our project : npm run start.(short-cut : npm start)
+cmd to build our project : npm run build.
+
+what is a react element ? 
+react element is equivalent to  dom element(html element).
+react element create an object. and when we render on to the dom then it will become html element.
+
+reactDom is used because we r dealing with our browser. to display our root on browser, reactDom is used. so we create our root by using ReactDom.createRoot method.
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+in react, react element is a js object.
+
+when we do root.render, then the ReactDOM will convert our react element/object to html element and will replace/render the root id on the browser.
+
+const heading = React.createElement("h1",{id:"heading"},"Namaste React");
+
+note: the above code(core react) is not developer friendly and readable so that's why jsx is created.
+
+the above way is the core of react but it is not a good way to write code, so developer have created jsx.
+
+note : react and jsx is different. (we can write react with react core without jsx. but jsx is a best way to write react code so we use jsx.)
+
+note : jsx is not html inside js. jsx is html like-syntax / xml-like syntax.
+
+js engine understand standard ecmascript.
+js is a code which js engine understand.
+ 
+const jsxHeading = <h1 id="heading">Namaste React using jsx.</h1>
+the above code will be not understand by the browser, it's not a pure valid js.(js engine can't read the above code). so how js engine understand the code and it is running it. 
+the js engine is understanding the code with the help of parcel (bundler). 
+the jsx code before going to the js engine, is transpiled(convert) into js. the code is converted by parcel. the parcel in the manager. In parcel their is babel. the babel is converting our jsx code to react code. the react code is a js object it is converted using root.render method into html code and is render. (the js engine understand the react code ).
+
+Jsx is get converted into react.createElement by babel and then the react.createElement is get converted into React.Element and is a JS Object and is render as an html element on the browser.
+
+babel is a js compiler or transpiler as well as it also convert one code to older/another code to understand old browser/new browser, and many more things it do.
+
+jsx is very similar to html but not html.
+
+note : In JSX, if we want to give attribute to our element then we use camelCase syntax. see tabIndex,className,etc...
+const jsxHeading = <h1 id="heading" className="head" tabIndex="1">Namaste React using jsx.</h1>
+
+if we write our jsx in multiple line then, we have to use normal bracket () so that babel can understand its starting and ending point . 
+const jsxHeading = (<h1 id="heading" className="head" tabIndex="1">Namaste React using jsx.</h1>)
+
+at the end of the day the below jsx code is a  React Element(its a normal js object) - the heading is a const variable - it has an object. 
+const heading = <h1 id="heading" className="head" tabIndex="1">Namaste React using jsx.</h1>
+console.log(heading);
+
+part 3 - episode - 4.
+
+what is react component ? 
+Everything in react is a component .
+component are of 2 types..
+1. Class-based component.(it uses js classes)
+2. Functional component.(it uses js functions)
+
+the best latest practice is now by using Functional component.
+Functional component are preferred now.
+jsx is a react element.
+
+what is React functional component ?
+It is a normal JS functions.
+a React functional component is a js function that return a piece of jsx code.
+
+important: ALWAYS CREATE REACT COMPONENT WITH FIRST WORD AS CAPITAL LETTER (IT'S PREFERRED WAY TO MAKE REACT COMPONENT).
+
+const HeadingComponent = () =>{
+    return <h1>Functional Component</h1>
+}
+
+if we have one line of code then we can remove return and curly braces.
+1st way : const HeadingComponent = () => <h1>Functional Component</h1>;
+
+2nd way : In industry this way is more used. but if possible use the return keyword.
+const HeadingComponent = () => (
+    <h1 className="heading">Functional Component</h1>
+);
+the above code is a perfect valid functional component. 
+
+jsx can be nested.
+const HeadingComponent = () => (
+    <div id="container">
+    <h1 className="heading">Functional Component</h1>
+    </div>
+);
+
+//react element 
+const headings = (<h1 id="heading" className="head" tabIndex="1">Namaste React using jsx.</h1>)
+
+//to convert above react element into functional component is by making the heading first word capital and convert it to arrow function. see below
+const Headings = () => (<h1 id="heading" className="head" tabIndex="1">Namaste React using jsx.</h1>);
+console.log(Headings);
+
+what is the different between react element and react functional component ? 
+In React, an element is the smallest building block while the component is a reusable piece of the code. The element contains the information to be rendered on the UI and the Components are composed of the elements.
+
+can we render our react functional component into our root element like this : 
+root.render(HeadingComponent);
+
+const HeadingComponent = () =>{
+    return <h1 className="heading">Functional Component</h1>
+}
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(HeadingComponent);
+
+note : the answer is no, because the above way is to render react element . 
+the way to render react component, is : root.render(<HeadingComponent/>). 
+the babel understand the above syntax. when babel sees the angular bracket with HeadingComponent then it understand its a component and render it.
+
+if we have 2 component, we can render one component into another ....
+const Title = () => (<h1 id="heading" className="head" tabIndex="1">Namaste React using jsx.</h1>);
+
+//to render above title component into our Headings component then we just insert it : <Title/>
+const HeadingComponents = () => (
+    <div id="container">
+        {/* render a functional component inside another functional component */}
+        <Title/>
+    <h1 className="heading">Functional Component</h1>
+    </div>
+); 
+
+root.render() is converting Everything into html and browser is rendering.
+
+important : component composition means one component inside another component.
+
+episode-3 part-5
+
+what is a functional component ? 
+Its a normal js function which return some piece of jsx code.
+
+we can use normal function or arrow function anyone. but industry preferred arrow function.
+very important  : {} - by using curly bracket we can write any js code, js function call, js expression, js element, console.log, etc in the functional component / JSX code.
+
+//react element.
+const title = (<h1 id="heading" className="head" tabIndex="1">Namaste React using jsx.</h1>);
+//react functional component
+const Title = () => (<h1 id="heading" className="head" tabIndex="1">Namaste React using jsx.</h1>);
+//const variable
+const number = 1000;
+
+const HeadingComponents = () => (
+    <div id="container">
+    {Title()} ---(here, we have call a functional component )
+    {title} ----(here, we have our react element)
+    <h2>{100+200}</h2> -----(js expression)
+    <h3>{console.log("hello")}</h3> ----(here, console.log)
+        {number} ----- (here, we have used curly braces, taken normal js variable in our jsx)
+    <h1 className="heading">Functional Component</h1>
+    </div>
+); 
+
+//output : 
+Namaste React using jsx.
+300
+hello
+1000
+Functional component.
+
+how to put react element inside react element ?
+const elem = <span>React element</span>;
+
+const title = (<h1 id="heading" className="head" tabIndex="1">
+{elem} -----(this is more preferred)
+<span>React element</span>; ---(this also work)
+Namaste React using jsx.
+</h1>);
+
+the below code will freeze our browser : we have created an infinite loop inside js. 
+const HeadingComponents = () => (
+    <div id="container">
+        {/* render a functional component inside another functional component */}
+        <Title/>
+        {Title()}
+        <Title></Title>--(all 3 are same & same o/p)
+    <h1 className="heading">Functional Component</h1>
+    </div>
+);
+
+const Title = (<h1 id="heading" className="head" tabIndex="1">
+Namaste React using jsx.
+<HeadingComponent/>
+</h1>);
+
+we can insert : 
+we can use react element inside react element
+we can use react element inside functional component
+we can use functional component inside react element.
+we can use functional component inside functional component.
+we can mix - match anything .
+
+note : don't put div inside h1. (not good)
+
+cross side scripting attack.
+jsx by default or automatically prevent cross-side scripting attack(malicious attack) happen by using api. if malicious code is present.
+if we use any malicious api, which return us a malicious data then, in our curly braces if we use the data. So, the jsx will not execute/run the malicious data. it will sanitize/prevent/skip the malicious data by its own.
+
+note : At the end of the day Everything is Js........
+
+completed

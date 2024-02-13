@@ -1,0 +1,122 @@
+(Q.1)What are various ways to add images into our App? Explain with code examples.
+There are several ways to add images to a web application:
+
+Using the <img> tag: This is the most common and straightforward method. You specify the src attribute with the URL of the image.
+html code
+<img src="image.jpg" alt="Description">
+
+Using CSS background image: You can set the background image of an element using CSS.
+html code
+<div style="background-image: url('image.jpg');"></div>
+
+Using CSS with external stylesheets: Similar to inline CSS, but applied through a separate stylesheet.
+html code
+<link rel="stylesheet" href="styles.css">
+css code
+.image-container {
+    background-image: url('image.jpg');
+}
+
+Using JavaScript: You can dynamically add images to the DOM using JavaScript.
+html code
+<div id="image-container"></div>
+javascript code
+const imageContainer = document.getElementById('image-container');
+const image = new Image();
+image.src = 'image.jpg';
+image.alt = 'Description';
+imageContainer.appendChild(image);
+
+Using inline SVG: SVG images can be directly embedded into HTML.
+html code
+<svg width="100" height="100">
+    <image xlink:href="image.jpg" width="100" height="100" />
+</svg>
+Each method has its use case depending on the specific requirements of your application. For example, using the <img> tag is suitable for static images, while CSS background images are often used for decorative or background images. Dynamic loading with JavaScript is useful for loading images conditionally or from external sources, and SVG is ideal for vector graphics or images that require interactivity.
+
+
+(Q.2)What would happen if we do console.log(useState())?
+If you do console.log(useState()), it will log an array containing two elements: the current state value and a function to update that state value.
+
+Explanation:
+
+The first element of the array is the current state value, which defaults to the initial state value provided to useState() or undefined if no initial value is provided.
+The second element of the array is a function that can be used to update the state value. This function is known as the "setter" function.
+Example:
+
+javascript code
+const [count, setCount] = useState(0);
+console.log(useState());
+In this example, if console.log(useState()) is called after useState(0), it will log [0, function] to the console, where 0 is the initial state value and function is the setter function to update the state value.
+
+
+(Q.3)How will useEffect behave if we don't add a dependency array?
+
+If you don't add a dependency array to useEffect, it will execute the effect on every render, causing it to run repeatedly.
+
+Explanation:
+
+Without a dependency array, the effect will be triggered after every render, regardless of whether the values it relies on have changed.
+This can lead to performance issues and unintended behavior, especially if the effect performs heavy computations or updates the DOM unnecessarily.
+Example:
+
+javascript code
+useEffect(() => {
+  console.log('Component rendered'); // This will be logged after every render
+});
+In this example, the console.log statement will be executed after every render of the component, regardless of whether any dependencies have changed. This can result in unnecessary logging and potentially impact performance.
+
+
+(Q.4)What is SPA?
+SPA stands for Single Page Application. It is a web application that dynamically updates the content on the same web page, instead of loading entire new pages from the server.
+
+Explanation:
+
+In SPA, interactions with the user, such as navigation and data updates, are handled through JavaScript, typically using frameworks like React, Angular, or Vue.js.
+SPA provides a smoother and more responsive user experience by reducing page reloads and providing faster navigation.
+It loads the initial HTML, CSS, and JavaScript files when the user first visits the application, and subsequent interactions are handled via AJAX requests to fetch data and update the DOM dynamically.
+Example:
+
+Gmail is an example of a SPA. When you navigate between different sections of your inbox, compose emails, or perform searches, the page does not reload entirely. Instead, the content is updated dynamically, providing a seamless user experience.
+
+
+(Q.5)What is Client Side Routing and Server Side Routing?
+Client-Side Routing:
+
+Definition: Client-side routing is handled by the browser using JavaScript, where navigation within a web application is managed without a full page reload.
+Key Points:
+Navigation occurs within the browser, updating the URL and rendering content dynamically without contacting the server.
+Provides faster transitions between pages and a smoother user experience.
+Commonly used in Single Page Applications (SPAs) built with frameworks like React, Angular, or Vue.js.
+Example:
+When you navigate between different sections of a social media website like Twitter or Facebook, the page updates dynamically without reloading, providing a seamless browsing experience.
+
+Server-Side Routing:
+
+Definition: Server-side routing involves the server determining which page to render based on the URL requested by the client.
+Key Points:
+Each URL request is typically handled by the server, which generates and returns a full HTML page.
+Results in full page reloads whenever the user navigates to a different page within the application.
+Commonly used in traditional multi-page web applications.
+Example:
+When you click on a link to view a specific product on an e-commerce website, the browser sends a request to the server, which responds by generating and returning the entire product page with its URL.
+
+
+(Q.6)What is the difference between Client Side Routing and Server Side Routing?
+The main difference between client-side routing and server-side routing lies in where the routing logic is executed:
+
+Client-Side Routing:
+
+Routing logic is executed within the user's web browser using JavaScript.
+Navigation between different pages or views within the application happens without requiring the entire page to reload.
+The browser updates the URL and renders the content dynamically based on the route, enhancing the user experience with smoother transitions.
+Commonly used in Single Page Applications (SPAs) where the initial HTML, CSS, and JavaScript are loaded once, and subsequent page changes are handled dynamically.
+Examples include frameworks like React Router, Vue Router, and Angular Router.
+Server-Side Routing:
+
+Routing logic is executed on the server where the web application is hosted.
+Each time the user navigates to a different page or route, the browser sends a request to the server.
+The server processes the request, generates a new HTML page, and sends it back to the browser, resulting in a full page reload.
+Commonly used in traditional multi-page web applications where each page has its own URL and content is generated dynamically on the server.
+Examples include applications built with frameworks like Express.js or Django, where routes are defined on the server to handle different URLs and return corresponding HTML pages.
+In summary, client-side routing handles navigation within the browser without full page reloads, while server-side routing involves requesting new pages from the server with each navigation action, resulting in full page reloads.

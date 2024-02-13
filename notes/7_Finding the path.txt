@@ -1,0 +1,247 @@
+part - 1
+
+useEffect is a name import from the react library.
+how is UseEffect call ?
+useEffect is call using two argument. the 1st is the callback fn and the 2nd is the dependency array.
+useEffect(()=>{}, []) ----(callback fn, dependency array).
+
+//if no dependency array then useEffect is called on every render. 
+    //if dependency array is empty [] then useEffect is called on initial render(just once)
+    //if dependency array is [btnNameReact] then useEffect is called everytime btnNameReact is updated.
+    useEffect(()=>{
+    console.log("useEffect is called");
+    },[btnNameReact]);
+
+when useEffect is called ?
+the useEffect is called when the component is rendered. everyTime my header component will render, the useEffect will be called. the dependency array changes the behaviour of its render. if we don't add dependency array, then our useEffect will be called everyTime, when our header / component rendered. if we have an empty dependency array, then our use UseEffect will be called only at initial rendering. 
+The basic nature or default behaviour of useEffect is to called after each/every render. if we give the useEffect, an empty dependency array then it will be called once after initial rendering. and what if we put something inside the dependency array. then the useEffect will be called when the dependency array content/something will changes.
+
+NOTE : In useEffect only callback fn is mandatory, dependency array is not mandatory.
+
+useState. 
+
+NOTE : when ever u r using useState, never create useState outside your component. Always call your useState inside your body. useState has a specific purpose, it is used to create a local state variable inside your component.
+and try to call the hooks on the top. 
+
+NOTE : never use useState inside if-else condition, inside loop, inside function. it will work. but it will create inconsistency in your code. react had told never use useState inside a condition.
+
+in short : the state variable are meant to be create inside the functional component on the higher level.
+
+part -3 
+
+Routing.
+
+we will going to need the npm library react router.
+
+cmd to install : npm i react-router-dom
+
+to create about page’s using router. we have to go to app.js. this is the root level component of our app. over here we have to create a Routing configuration( some information that will define what will happen on a specific route. an information that will tell browserRouter what will happen on a specific path). the createBrowserRouter takes a list of path(the path is nothing but an object). 
+
+how to create a Routing configuration ?
+So, we should do named import of createBrowserRouter from the react-router-dom. the createBrowserRouter takes some configuration. that configuration is a list. It's a list of object. each and every object define a different path and what should happen on that path. after creating this configuration, we have to provide this configuration to render it. 
+
+React-router-dom gives us a functionality known as RouterProvider. the RouterProvider actually provide the appRouter configuration to our app. 
+
+const appRouter = createBrowserRouter([
+    {
+        path: "/",
+        element: <AppLayout/>,
+        errorElement: <Error/>
+    },
+    {
+        path: "/about",
+        element: <About/>,
+    },
+]);
+root.render(<RouterProvider router={appRouter}/>);
+
+On react router website, u will find many type of routers which have their own functionality and features.
+NOTE :  the react router library documentation says that createBrowserRouter is a recommended router for all react router web projects.
+
+short-cut to create a component : type rafce and press enter. if possible don't use as if u write more u will remember more. if you are beginner then please write on your own.
+
+if we try to access any invalid or not present router, then our error page will be handle by the react router dom. it created a default error page. example if we enter localhost:1234/invalid-route, our console will display below content 
+Unexpected Application Error!
+404 Not Found
+💿 Hey developer 👋
+You can provide a way better UX than this when your app throws errors by providing your own ErrorBoundary or errorElement prop on your route.
+
+we can create our own error component and display if we go for invalid route or any error happen. we have to add the error component in the home path object. 
+
+if our path is "/" show element(functional component) that is <AppLayout/> and if we search any other path which is not present then we should display errorElement(error functional component). by default also we have an error component(created by react router dom). 
+{
+        path: "/",
+        element: <AppLayout/>,
+        errorElement: <Error/>
+    },
+
+IMPORTANT : react router dom gives us many more features and one feature is hooks(is a function that has a specific purpose). that hook is "useRouterError".  by using the useRouterError, it gives more information about your error. the useRouterError provide some attributes which help us to create more informative error page.
+eg: const err = useRouteError();  ...(err is an object)
+<h3>{err.status} : {err.statusText}</h3>
+
+how do u known something is hook ? 
+whenever u see a function starting as an "use" word as a prefix used to any word then it is a hook(by default/convention used in react industry).
+
+part - 4
+
+children Routes.(IMPORTANT Concept)
+
+Q. when we change our route to about or contact or any other route then, our header and footer should be present. how to create this functionality ? 
+answer : by using children route. 
+to make the functionality, we will make children route in the createBrowserRouter. like this see below : 
+
+the children is again a list. a list of path of children. on the root route we are creating the children of our parent AppLayout. it take the same configuration, we had earlier. now we should render our children on the AppLayout accordingly.
+
+const appRouter = createBrowserRouter([
+    {
+        path: "/",
+        element: <AppLayout/>,
+        children: [
+            {
+                path: "/",
+                element: <Body/>
+
+            },{
+                path: "/about",
+                element: <About/>,
+        },{
+        path: "/contact",
+        element: <Contact/>
+        },
+        ],
+        errorElement: <Error/>,
+    },])
+
+comment in jsx : /*  */
+
+    now in the AppLayout component, we will put some condition. like 
+    const AppLayout = () =>(
+    <div className="app">
+        <Header/>
+        {/** if path = /  */}
+        <Body/>
+        {/* if path = /about */}
+        <About/>
+        {/* if path = /contact */}
+        <Contact/>
+    </div>
+)
+
+now, how we will be going to load in the AppLayout. so again react router dom help us by given an Outlet component.
+the Outlet is used in AppLayout, so whenever their is change in the path. the Outlet will be filled with the children according to the path. So, the outlet will be filled with the children according to the path on what page we are.
+so outlet is kind of tunnel, all the pages are going in and coming out. so bts the outlet is replaced by the component by using path.
+
+Now, let's create a link so that by clicking on the header items( home, about us, contact us,) we should be re-directed to that page.
+ we can use anchor tag and link it. 
+ IMPORTANT : when u r using react, u should not use anchor tag. because by using anchor tag your whole page will get reload. <li><a href="/">Home</a> </li>
+             <li><a href="/about">About US</a></li>
+
+U can navigate to new page without reloading the whole page. so, we will use a super power called as "link" component given by react router dom. the link component work exactly the same as anchor tag. it will just change component, jsx code in the page.
+<li><a href="/about">About US</a></li>   
+<li><Link to="/about">About Us</Link></li>
+the difference is that anchor tag has an href while link tag has a to attribute, where we define the path.
+
+if u use anchor tag, it reload the whole page. but if u use link component, then it will Refresh the page. only the components are changed.
+Refreshing the page and reloading the page, both are different. by using link component, are pages are Refreshed. and that's why our react app are called as single page Application (SPA). we have only one page and only components are changing and their is no change of page or reload the page. this is known as SPA. 
+
+their are 2 types of routing in web-app ? 
+1. client side routing.
+2. server side routing.
+
+client side routing, means we are not making a network call and not fetches any data. In initial phase only we load our data/component. our component are loaded during initial phase only. in react we use client side routing.
+
+server side routing means you have a index.html, aboutUs.html, contactUs.html. if we click on the anchor tag of  "/about" then it reload the whole page and it send a network call to the aboutUs.html/server and fetches the aboutUs.html page and render on to our page. it makes a network call and get's the data from the network aboutUs.html and render on to the UI and refreshes the whole page.
+in short, u make a network call to the server and fetches the data / aboutUs.html and is render on our page.
+
+part - 5.
+
+dynamic route.
+path: "/restaurants/:resId"
+
+now we will be making RestaurantMenu component. having dynamic data on the RestaurantMenu. we will make a RestaurantMenu route in the appRouter. the path will be dynamic .because every restaurant will have different path id. every restaurant have their unique id. we will give path and element(to load).
+
+const appRouter = createBrowserRouter([
+    {
+        path: "/",
+        element: <AppLayout/>,
+        // here we have created children route for our parent AppLayout.
+        children: [
+            {
+                path: "/",
+                element: <Body/>
+
+            },
+            {
+                path: "/about",
+                element: <About/>,
+        },
+        {
+        path: "/contact",
+        element: <Contact/>
+        },
+        {
+            path: "/restaurants/:resId",
+            element: <RestaurantMenu/>
+        }
+        ],
+        errorElement: <Error/>,
+    },
+])
+
+path: "/restaurants/:resId", we have the dynamic path. resId is the dynamic path. it will change w.r.to restaurant. now we will make an api call to get dynamic data from the swiggy api by using useEffect hook.
+ useEffect(() =>{
+        fetchMenu();
+    },[]);
+
+why we just call the fn in useEffect ? why we not directly write the fn in the useEffect ? 
+
+now we will be making an async function.
+now let's create useState variable as resInfo and setResInfo. and let initialize resInfo with value as null.
+we will fetch the restaurant menu api from the swiggy api and use it to get the real data of menu.
+
+IMPORTANT : 
+const [resInfo, setResInfo] = useState(null);
+the below error come because of the null value.
+
+TypeError: Cannot destructure property 'name' of '(intermediate value)' as it is undefined.
+it means that our name is not fetched from the resInfo. so initially the value was undefined. 
+
+to solve the problem, we will write 
+this : resInfo.length === null ? (<Shimmer/>)
+so, earlier my name was having value as null so thats why it is showing error.
+so we should return this : resInfo.length === null ? (<Shimmer/>). before using the value
+(data is not fetched). after(data is fetched) we will use the value, see below :
+const {name, cuisines, cloudinaryImageId, costForTwo} = resInfo?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants[0]?.info;
+
+graphql - it helps u with overFetching. load only the data's which are needed. the data structure will become less complicated.
+
+now we will extract itemCards : 
+const {itemCards} = resInfo.data.cards[2].groupedCard.cardGroupMap.REGULAR.cards[2].card.card;
+it consist of the menu items. 
+we will use a map on the itemCards to fetch the menu items.
+<ul>
+                {
+                    itemCards.map((item) =>(
+                        <li key={item.card.info.id}>{item.card.info.name} - {" ₹"}{item.card.info.price / 100 || item.card.info.defaultPrice / 100}</li>
+                    ))
+                }
+            </ul>
+while adding price, some have price and some have default price so we use or || operator.
+we have just made the recommended items only.
+
+now, we will pass our id to the route and how we will read the resId.
+we will use a hook called as "useParam" hook. we get it from the react router dom. we will extract the resId(restaurant id) from the useParam hook. 
+
+const params = useParams();
+    // console.log(params) --- {resId: '1234'}
+
+params is an object with the resId. the resId we will destructure it on the fly.
+const {resId} = useParam();
+
+const data = await fetch(MENU_API+resId);
+
+Always keep your api file's in the constants.js .
+
+the <Link> is a component given by react router dom and behind the scene it uses the anchor tag. link is a wrapper over anchor tag. react will keep track of the link and will not refreshes the page. html/browser only understand anchor tag so react router dom change the link tag to anchor tag.
+
+completed

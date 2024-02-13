@@ -1,0 +1,60 @@
+if npx is for run then, why we write npm start ?  what is npm and npx and different?
+when is useEffect is called ? how is effected with the array dependencies ? 
+what is babel? how work?
+? - optional chaining...(google it)
+whenever u create a file, try to name the component as same as file. (file 1st word should be capital) ?
+can u use default and Named export same time in a file ? (google it)
+what is cors policy ?
+optional chaining in js - ? (google it)
+if the btnNameReact is a const variable, why and how a const variable is modifying or updating? is it breaking the const principle? how this setBtnNameReact change this btnNameReact variable to Logout? HOw?
+useParam ? what ? how ? why ? when ?
+why we write super props in constructor props ?(google it)
+know the difference btw mount update and unmount ?
+async componentDidMount?
+why we can't make the useEffect async ? useEffect(async()=>{},)? react complain and give error ? 
+
+const [resInfo, setResInfo] = useState(null);
+if(resInfo.length === null)
+    return <Shimmer/>;
+error length comes ? why ?
+
+why we don't write fetchData in useEffect only ? why we call the fn in useEffect?
+question : const [btnNameReact,setBtnNameReact] = useState("Login");
+if the btnNameReact is a const variable, why and how a const variable is modifying or updating? is it breaking the const principle? how this setBtnNameReact change this btnNameReact variable to Logout? HOw?
+IMPORTANT : question : is it rendering the whole header or only the btnNameReact changes ? 
+answer : it re-render the whole header.
+//if no dependency array then useEffect is called on every render. ?
+Refreshing the page and reloading the page?
+know the difference btw mount update and unmount ?
+why we use componentDidMount ? componentDidUpdate ? componentWillUnMount ?
+what is linter ? (google it)
+bloading/bundle size increase (google it)
+
+if component state variable change, then does it call the useEffect also ?
+google ["@type"]. why ? 
+how to manage data layer ? very important.
+important : learn - lifting the state up (react.dev)
+google (react context).
+different between useContext and Redux. 
+google it . why we have redux(vanilla redux) and redux Toolkit ? 
+
+Q. reducer: {
+        // cart name comes from cartSlice. cartReducer
+        cart : cartReducer,
+        
+    }
+what is cartReducer ? doubt ?
+
+1. onClick= {handleAddItem}
+3. onClick = {()=> handleAddItem(item)} --- this means calling a callback fn.
+2. onClick = {handleAddItem(item)} ---(not try this why ? search it) --- this means calling the function right away
+
+what is the difference btw all the 3 up ? very imp.
+2nd mistake is confusion btw reducer and reducers ?
+learn redux (bts it uses immer library)
+read RTK query. rtk query quick start. make an api call.
+diff btw callback fn, arrow fn, function expression, higher order fn,
+
+what is the different between react element and react functional component ? 
+In React, an element is the smallest building block while the component is a reusable piece of the code. The element contains the information to be rendered on the UI and the Components are composed of the elements.
+

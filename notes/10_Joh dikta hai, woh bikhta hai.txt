@@ -1,0 +1,52 @@
+how to make our app beautiful.
+
+part - 1
+
+use external file for css.
+sass/scss. sass add more power to css.
+styled component(used more).
+tailwind css.
+material ui(react component library very popular)
+chakra ui.
+bootstrap.
+ant design(react 2nd most popular ui)
+
+part - 2
+
+tailwind css.(css framework)
+go to tailwind website and go to installation and then go to framework guides. here we r using parcel so select parcel.
+cmd: npm install -D tailwindcss postcss
+     npx tailwindcss init. (invoking/executing tailwind and it will create a tailwind.config.js file)
+what is postcss ? postcss is a tool for transforming styles with js.(bts tailwind use postcss)
+
+we have to create a .postcssrc file(config for postcss).
+{
+  "plugins": {
+    "tailwindcss": {}
+  }
+}
+
+we have to tell postcss that we r using tailwindcss over here. 
+here we r using parcel so the parcel bundler uses the postcssrc. the postcssrc is used to understand tailwind. so postcssrc is kind of way that our project understand what is written inside tailwind.
+
+let's config our tailwind
+
+content: [
+    "./src/**/*.{html,js,ts,jsx,tsx}",
+  ],
+
+the content attribute takes an array/list of all the files with extension where i can use my tailwindcss.
+
+part - 3
+
+if the tailwind does not give suggestion then run cmd : ctrl+spaceBar
+
+advantage :
+1. we have to not change the page and go to write in index.css 
+2. light-weight
+3. min css required it includes.
+4. if used more than one time any code (m-4,p-4) it import one time in your production file. it has a lot of advantages.
+
+Let's code... practice, practice, practice
+
+completed

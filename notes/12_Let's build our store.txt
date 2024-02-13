@@ -1,0 +1,364 @@
+Redux.
+
+Redux work in Data Layer of our App. (data layer and ui layer work in sync and build our application )
+Redux - how we can handle data effectively in our app.
+
+Part - 1
+
+NOTE : misconception - Redux is not mandatory in your application.
+if u have a small/mid app then u should not use Redux.
+
+if u r building a big/large scale application where the data is heavily used. where a lot of read and write operation are happening in your react application. their are lot of component. the application is huge. then use Redux make sense. u can make app without redux also. 
+
+NOTE : Redux and React are different Libraries. 
+It's a different Library, we install and import redux in our app and then use it . 
+their are different Libraries also example : Zustand(gaining Popularity).
+
+Redux pros - 
+It is use for handling state of our app. 
+It offers easy debugging.(Redux chrome extension)
+
+
+Part - 2
+
+Redux - A Predictable State Container for JS Apps. 
+It is popularly used with react. but is not only for react.
+Redux offers State management.
+Redux offer 2 Library : 
+1. React-Redux.
+2. Redux Toolkit.(new version and standard way of writing Redux also called as RTK)
+
+We will be using Redux Toolkit along with React-Redux.
+
+Earlier, we used to write in a different way in vanilla redux(old redux). now we used to write in a different way that is redux Toolkit. 
+
+google it . why we have redux(vanilla redux) and redux Toolkit ? 
+
+Redux Toolkit(RTK) docs : The Redux Toolkit package is intended to be the standard way to write Redux logic. It was originally created to help address three common concerns about Redux:
+"Configuring a Redux store is too complicated"
+"I have to add a lot of packages to get Redux to do anything useful"
+"Redux requires too much boilerplate code"
+
+part - 3
+
+Let's build our Cart. and let's build a cart Page also.
+(Here Redux means Redux Toolkit)
+
+We will be using Redux for managing data of our application. 
+
+what is a redux store ? 
+It is a big Whole Object. U can assume it is a big Object and is kept in a central global place. 
+It is kind of a very big js Object with a lot of data inside it and is kept at a global central place. 
+
+any component can access the redux store in our app. it can write/read data in the redux store. it is like a very big Object and is kept in a central place. We keep major data in the redux store. 
+
+Is it a good practice to store all the data inside the whole big Object ? is it good to put all the data inside it ?
+Yes, It's okay. their is no problem with storing big state Object. So that our redux store does not become very big, very clumsy, we have something know as "Slices" in our redux store. The part of the redux store is called as slices. U can assume a slice to be a small portion of our redux store. 
+may create multiple slices in our redux store. 
+
+why we need slices and why we create multiple slices and what is slices in redux store ? 
+So to keep data separate, we make logical partition. this logical partition are slices. 
+assume, 
+1. we have to add cart data into our redux store. we will create a separate slices for a cart data. so we can create a cart slice.  
+2. suppose we have to keep login info inside  our redux store. so we will create a user slices kind of thing. 
+3. Themes related we create a display slice.
+
+We will create a cart slice in our food app. 
+This cart slice will hold all the data of the app. Initially, the cart slice can be empty array but later on as we put data inside it . we can just modify the cart slice. data inside the cart slice. 
+
+So, when we click on the add button(present in the ItemList.js) how does the data goes inside the cart slice. how will the data go. It's not simple. we can't directly modify our cart slice. redux says that we cannot directly modify your cart slice.
+their is a way we can do that. 
+
+suppose, when we click on the add button, we have to dispatch an action. by clicking on the add button, it dispatches an action and then it calls a fn. the fn will internally modify the cart. the fn name is known as reducer.
+So the item will be added to the slice cart. the cart slice will have data inside it.
+
+NOTE : when we click the add button, it dispatches an action which call the reducer fn which update the slice of our redux store. 
+
+now above line we have seen how to write data, now we will see how to read data in redux.
+now how we will read data from the cart slice to the Cart(symbol par number) header component. for that we use "selector" . we use selector to read the data from the Cart slice to the header component Cart. the selector will give the data over Cart header component. When we use selector . This phenomena is known as "subscribing to the store". so if any changes happen in the Cart slice then redux will automatically change the header component Cart by using selector. 
+
+Behind the Scene what happen : 
+
+how to write in redux store.
+Add(click) -> dispatch(action) -> fn() name reducer -> slice update(redux store).
+
+how to read in redux store.
+slice update(redux store) -> selector(connecter) -> cartSymbol(number updated automatically)
+
+
+part - 4
+
+let's build the redux store.
+
+Redux Toolkit
+install @reduxjs/toolkit and react-redux(react team has given this name).
+- Build our store
+- Connect our store to our app
+- Slice (cartSlice)
+- dispatch (action)
+- selector
+
+cmd : npm i @reduxjs/toolkit 
+2nd Library : npm i react-redux
+
+we will build our store in utils. let the store name be appStore.js . we will use a fn known as "configureStore()" to create our own store. the configureStore fn comes from redux toolkit.
+the configureStore will give us our store to react application. we will add slices inside configureStore. 
+now let's provide our appStore.js to our application.
+In app.js, we need to provide our store to our application. we will need a "provider" importing from react-redux. 
+
+Their is a difference btw 2 Libraries. the RTK has work to do with redux. so creating a store is work of redux. so that's why "configureStore" comes from redux toolkit. 
+
+import { configureStore } from "@reduxjs/toolkit";
+const appStore = configureStore({});
+
+now we have to provide this store to our react app. so it's kind of like a bridge btw our react app and redux. so provider is used and is comes from react-redux. 
+import { Provider } from "react-redux";
+
+the configureStore is a redux job while providing it to react application is work of react-redux by using provider. 
+
+to provide our app, we will be wrapping our app with the provider. the provider take store as a props.In props we pass our appStore to a key i.e store(important). 
+
+<Provider store={appStore}>
+<UserContext.Provider value={{loggedInUser:userName , setUserName}}>
+<div className="app">
+<Header/>
+{/* placeholder or layout template for route-specific component */}
+<Outlet/>
+<Footer/>
+</div>
+</UserContext.Provider>
+</Provider>
+
+u can provide redux store for small component or some parts also. 
+
+now we will create our slices. let's create a cartSlice.js in utils. we create the cartSlice by using a fn called as "createSlice". the createSlice fn takes a configuration to create a slice. the configuration is shown below : 
+
+import { createSlice } from "@reduxjs/toolkit";
+
+
+actions : the action inside a cart can be add an item, remove an item, u can clear the cart , etc..
+actions, u can think it kind of small api's to communicate with redux store. 
+
+inside the reducers we have a fn to modify the slice of the store. it gets access to the state and an action. the fn in reducers has 2 parameter, a state and an action. and now it will modify our state based on our action. here the state is the initialState of our store.
+
+import { createSlice } from "@reduxjs/toolkit";
+
+const cartSlice = createSlice({
+    name: 'cart',
+    // what will be the cart items initially
+    initialState: {
+        items: []
+    },
+    //fn to modify the items
+    reducers: {
+        addItem : (state,action) => {
+            // got an items
+            state.items.push(action.payload);
+        },
+        // no need action
+        removeItem : (state) => {
+            //remove from end
+            state.items.pop();
+        },
+        clearCart : (state) => {
+            // clear the cart items = 0
+            state.items.length = 0;
+            // state = [] ... this will not work. their is a reason.
+        }
+    },
+})
+
+now we export our actions and reducer.
+
+// export actions
+export const {addItem, removeItem, clearCart} = cartSlice.actions
+
+// here we r only exporting the reducers.
+export default cartSlice.reducer;
+
+NOTE : the above syntax is given by redux-toolkit. 
+
+the cartSlice is a big Object, which has actions and reducers. 
+
+now when we have build this slices. we want to add this to our store. our store is empty right now.
+if u want to modify a big store, it also has a reducer for it. and the reducer combine reducer of their slices. the reducer present in the appStore is to modify store. the reducer is combination of different small/individual reducer that is present in the cartSlice.js file .
+
+we will import our cartReducer from cartSlice.
+
+import { configureStore } from "@reduxjs/toolkit";
+import cartReducer from "./cartSlice"
+
+const appStore = configureStore({
+    reducer: {
+        cart : cartReducer,
+        //user : userReducer,
+    }
+});
+export default appStore;
+
+the reducer present above is our app big reducer. the cart present inside consist of small reducer from different slices. each slice will have it's own reducer. 
+
+suppose, we have multiple slices. like user reducer then we have added it in our reducer.
+
+NOTE : we are directly mutating/modifying the state itself. 
+
+let's read data from our app. we will use a selector to subscribe to our app. to our cartSlice.js, suppose inside initialState in items let's add a burger, pizza to our cart(dummy value). now when we will read, the cart should show 2 items. to read items we will use a selector. 
+
+a selector is noting but a hook in our react app.
+selector comes from "react-redux".
+
+the selector hook give us access to the store. we will now tell them what portion of our store we will need access. if we need just items access.
+
+// Subscribing to the store using a Selector
+const cartItems = useSelector((store)=> store.cart.items);
+console.log(cartItems);
+Array(2)
+0 : "Burger"
+1 : "Pizza"
+length : 2
+
+the selector identify what portion of our store i want to read and i need to subscribe to(common lingo-language used in industry). the cart will get the data of the items.
+
+<li className="px-4 font-bold ">Cart ({cartItems.length} items)</li>
+
+we have just added dummy value. let's add real data. In our itemsList.js we have add button to add the items. if we click on the add button then the items should be added to the cart. how to add the items in the cart if click on the button. let's write the logic. so, when we click on the add button, we have to dispatch an action. how to dispatch an items. we will make an onClick and an handleAddItem.
+
+<button className=" bg-black text-white shadow-lg m-auto p-2 mx-16 rounded-lg" onClick={handleAddItem}> Add +</button>
+
+const dispatch = useDispatch();
+
+//dispatch an action 
+const handleAddItem = () => {
+    dispatch(addItem("pizza")); 
+}
+
+we need a "dispatch", we get it from a hook "useDispatch()". the dispatch is a function. useDispatch we got from "react-redux". now we want to dispatch some actions. the actions are the previous one's we have exported in the cartSlice.js file that are addItem, removeItem, clearCart. we will import the addItem action from cartSlice file. 
+now i will dispatch this addItem. whatEver we will add inside this addItem("pizza") then it will go to inside cart. the "pizza" present inside the addItem is the action.payload which we have used in the reducer(cartSlice.js). the "pizza" data goes inside the reducer in action and as an action.payload .
+
+reducers: {
+addItem : (state,action) => {
+// got an items and added
+// mutating/modify state here
+state.items.push(action.payload); --- (here the action.payload will be pizza)
+},}
+bts the below happen : console.log(action)
+O/P : {type: 'cart/addItem', payload: 'pizza'}
+payload:"pizza"
+type:"cart/addItem
+
+whenever i'm clicking on the add button, it is modifying the store and is changing the header.
+whenever i'm clicking on the add button, an action is dispatch which call the reducer fn which update the slice of the store and because my header is subscribed to the store using a selector so the header is modifying automatically.
+
+const handleAddItem = () => {
+dispatch(addItem("pizza"));
+}
+
+1. onClick= {handleAddItem}
+3. onClick = {()=> handleAddItem(item)} --- this means calling a callback fn.
+2. onClick = {handleAddItem(item)} ---(not try this why ? search it) --- this means calling the function right away
+
+what is the difference btw all the 3 up ? very imp.
+
+now let's add the real data inside the cart. we will use 2. onClick = {()=> handleAddItem(item)}
+
+<button className=" bg-black text-white shadow-lg m-auto p-2 mx-16 rounded-lg" onClick={() => handleAddItem(item)}> Add +</button>
+
+ const handleAddItem = (item) => {
+dispatch(addItem(item));
+//item is the single card detail
+console.log(item);
+}
+
+the item will be a big Object of a card. let's build our cart page. we will add path in the app.js.
+In the cart.js file, how we will show the cart items. 
+
+1st of all how i will read my cart. how will i read the cart info. how will i read the cart from the store. we have to subscribe to the store. we will use selector. then we are concern with the cart items, we will get the cart items from the store.
+
+let's show our cart items in cart.js file. we will add some items in the cart items. we can reuse the component(itemsList.js). that is why we make our component in such a way we can use it.
+
+const cartItems = useSelector((store) => store.cart.items);
+<ItemList items={cartItems} />
+
+let's build a feature of clear cart now in the cart.js file. we will make a button of clear cart. we will make an onClick with handler name as handleClearCart. (very important) the handleClearCart will be a callback function and will use the dispatch inside the callback fn. inside the dispatch we will call the clearCart() fn from the cartSlice.js file.
+
+<button className="p-2 m-2 bg-black text-white rounded-lg font-bold" onClick={handleClearCart}>
+Clear Cart
+</button>
+
+const dispatch = useDispatch();
+const handleClearCart = () => {
+dispatch(clearCart());
+}
+
+let's show some message is the cart is empty. 
+{cartItems.length === 0 && <h1 className="text-xl font-medium"> Cart is Empty. Please Add Items to Your Cart !!!</h1>}
+
+part - 5
+
+Interview question. 
+
+1. whenever u r doing a selector, make sure u r subscribing to the right portion of the store. if u don't subscribe to the right portion of the store then it will be a big performance loss(important).
+
+
+so example :
+1. here we r subscribing the whole store. This is very less efficient.( tell this things to your Interviewer u will make positive impact)
+const store = useSelector((store) => store);
+const cartItems = store.cart.items;
+
+the store variable is subscribed/connect to the redux store. whenever their is change inside the store, your cart component will automatically knows.
+
+
+2. here we r subscribing a small portion of the store.
+const cartItems = useSelector((store) => store.cart.items);
+
+IMPortant : Please be careful when using the "useSelector" hook. 
+
+better way is to only subscribe to the specific/small portion of the store. 
+the name is selector because u are selecting a small/big portion of the store. 
+
+redux is a powerful heavy tool, we should be careful while using it.
+
+part - 6
+
+2nd mistake is confusion btw reducer and reducers.
+so, when u r creating any store. then inside it we use the word reducer(this is one big reducer of store). this reducer can contain multiple small reducer. but when we r creating a CartSlice. we create multiple reducers. and so when u r exporting, u r exporting a single reducer from the cartSlice. reducer is nothing but a combination of small reducers. be careful while using reducer and reducers keyword.
+
+part - 7
+
+this method is in vanilla(older) redux => don't mutate the state, returning was mandatory.
+we create copy and then mutate.
+const newState = [...state];
+newState.item.push(action.payload);
+return newState;
+
+now in redux toolkit 
+we have to mutate the state(mandatory).
+state.items.push(action.payload);
+bts, redux toolkit is running the above code  method, old vanilla redux code method was used.
+
+now  redux toolkit uses immer js, a small library. this immer library is used to do the mutating state. so basically the immer library is kind of finding the difference btw the original state, 
+the mutated state and then gives u back the new state. which is a immutable state. a new copy of the state.  
+
+learn redux (bts it uses immer.js library)
+the immer is a tiny package that allows u to work with immutable state in a more convenient way.
+
+//learn immutable Object in js...
+if we do state=["akshay"], it won't work. to  understand it u should know inner. but as a hint, when u do state=["akash"] then u r not modify the state. u r just changing the reference to it. u r not mutating the state. it is not mutating the state, it is just adding reference to it. 
+state.items.length = 0;
+state = ["akshay"] // ... this will not work. their is a reason. see video time : 2 hr 16 min.
+
+NOTE : RTK says either mutate the existing state or return a new state.
+
+originalState = {items:["pizza"]};
+when we return empty then it will modify the originalState. // return {items:[]};//this work. this new Object will be replaced inside originalState = [].
+
+part - 8 
+
+redux dev tools
+
+redux is used for very large scale application. 
+read RTK query. rtk query quick start. make an api call.
+
+middlerWare, Thunks
+
+completed

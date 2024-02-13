@@ -1,0 +1,123 @@
+(Q.1) What is the difference between Named export, Default export, and * as export ? 
+
+Named Export: Allows you to export multiple variables, functions, or classes from a module by name.
+javascript code
+// Module: math.js
+export const PI = 3.14;
+export function double(x) {
+    return x * 2;
+}
+// Usage
+import { PI, double } from './math.js';
+console.log(PI); // Output: 3.14
+console.log(double(5)); // Output: 10
+
+// ex. importing a single named export
+import { MyComponent } from "./MyComponent";
+
+// ex. importing multiple named exports
+import { MyComponent, MyComponent2 } from "./MyComponent";
+
+// ex. giving a named import a different name by using "as":
+import { MyComponent2 as MyNewComponent } from "./MyComponent";
+
+Default Export: Exports a single value or function as the default export from a module.
+javascript code
+// Module: greeting.js
+const greeting = 'Hello';
+export default greeting;
+// Usage
+import greeting from './greeting.js';
+console.log(greeting); // Output: Hello
+
+* as Export: Imports all exported values from a module and binds them to a single object.
+javascript code
+// Module: colors.js
+export const red = '#ff0000';
+export const blue = '#0000ff';
+// Usage
+import * as colors from './colors.js';
+console.log(colors.red); // Output: #ff0000
+console.log(colors.blue); // Output: #0000ff
+
+(Q.2) What is the importance of config.js file?
+The importance of a config.js file lies in centralizing configuration settings for an application, making it easier to manage and modify these settings without altering the codebase directly. It enhances maintainability and allows for easier deployment across different environments.
+
+Example:
+Imagine you have a web application where you need to configure API endpoints for development, testing, and production environments. Instead of hardcoding these endpoints directly into your code, you can define them in a config.js file like so:
+
+javascript code
+// config.js
+const config = {
+    development: {
+        apiUrl: 'http://localhost:3000/api'
+    },
+    testing: {
+        apiUrl: 'http://test.example.com/api'
+    },
+    production: {
+        apiUrl: 'https://api.example.com/api'
+    }
+};
+
+export default config;
+Then, you can import and use this configuration throughout your application:
+
+javascript code
+// app.js
+import config from './config.js';
+
+// Use the apiUrl based on the environment
+const apiUrl = config[process.env.NODE_ENV].apiUrl;
+fetch(apiUrl + '/data')
+    .then(response => response.json())
+    .then(data => console.log(data));
+This way, you can easily switch between different configurations based on the environment without changing your code, just by modifying the config.js file.
+
+(Q.3) What are React Hooks?
+React Hooks are functions that allow developers to use state and other React features in functional components, which were previously only available in class components. They enable developers to write more concise, readable, and reusable code by managing component state and side effects without the need for class syntax.
+
+Hooks provide a way to use state, lifecycle methods, context, and other React features in functional components without writing a class. They include useState, useEffect, useContext, and many others.
+
+Here's a brief explanation of some common React Hooks:
+
+useState: Allows functional components to manage local state.
+useEffect: Performs side effects in functional components, such as data fetching, subscriptions, or manually changing the DOM.
+useContext: Allows functional components to consume context.
+useReducer: A more advanced state management hook, often used when state logic is complex or involves multiple sub-values.
+useRef: Provides a way to create mutable references to elements or values that persist across renders.
+useMemo and useCallback: Optimize performance by memoizing values and functions to prevent unnecessary re-renders.
+Hooks revolutionized React development by simplifying component logic, improving code readability, and promoting the use of functional components.
+
+(Q.4) Why do we need useState Hook?
+We need the useState hook in React to introduce state management within functional components. Prior to hooks, functional components were stateless, meaning they couldn't hold or manage their own state. With the introduction of useState, functional components gained the ability to hold and update state, making them more powerful and versatile.
+
+Here are a few reasons why useState is essential:
+
+State Management: It allows functional components to maintain and update their own state without converting them to class components.
+
+Simplicity: Using useState simplifies state management by providing a straightforward API to define and update state within a functional component.
+
+Avoidance of Class Components: Before hooks, if a functional component needed to manage state, it had to be converted into a class component. Hooks eliminate the need for class components, promoting consistency and simplicity in component structure.
+
+Encourages Functional Programming: By enabling state management in functional components, hooks encourage the use of functional programming principles, such as immutability and purity, which can lead to cleaner and more maintainable code.
+
+In summary, useState is crucial in React development as it allows functional components to hold and update their own state, simplifies state management, avoids the use of class components, and promotes functional programming practices.
+
+(Q.5) why do we need useEffect Hook ? 
+
+We need the useEffect hook in React to perform side effects in functional components. Side effects include actions like data fetching, manually changing the DOM, subscriptions, or any other asynchronous tasks.
+
+Here's why useEffect is essential:
+
+Lifecycle Management: useEffect enables functional components to replicate lifecycle behavior similar to class components. You can execute code in response to component mounts, updates, or unmounts.
+
+Data Fetching and Asynchronous Operations: It allows fetching data from APIs or performing other asynchronous tasks within functional components. This makes it easier to manage asynchronous operations without needing to rely on class components.
+
+Dependency Tracking: useEffect handles dependencies between state and side effects. It reruns the effect when its dependencies change, ensuring that the component stays in sync with its data.
+
+Cleanup: useEffect allows you to specify cleanup logic, which runs when the component unmounts or before the effect runs again due to a dependency change. This is useful for tasks like unsubscribing from event listeners or clearing timers to prevent memory leaks.
+
+Promotes Separation of Concerns: By separating side effects from the main component logic, useEffect promotes cleaner and more maintainable code. It helps to separate concerns and keep components focused on their primary responsibilities.
+
+In summary, useEffect is crucial in React development for managing side effects, handling asynchronous operations, tracking dependencies, performing cleanup, and promoting separation of concerns within functional components.

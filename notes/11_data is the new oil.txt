@@ -1,0 +1,267 @@
+how to manage data in app
+
+part - 1
+
+higher order component.
+it is a fn that takes a component and return a component with modification.
+It takes existing component as an input and then it enhances that component(add some extra feature to that component) and return it back. it just enhances/modifies the component.
+
+In the swiggy app, we can see some restaurant provide 50% off or 100% off and some don't. so let's create this feature and show it on the card.
+we can see in the api data that it is inside info as info:aggregatedDiscountInfoV2:{header:'50% OFF',subHeader:'UPTO 100'}
+
+we will go and write the logic.
+In RestaurantCard we create our hof.
+If we see the RestaurantCard.js is a normal component. we want another RestaurantCard that will be enhances version of RestaurantCard(with label of discount)
+
+//Higher Order Component
+//RestaurantCard(as an input) => RestaurantCardDiscount(output)
+
+export const withDiscountLabel = (RestaurantCard) =>{
+    //imp : return a component, u see after return '() => {}' is a functional component.
+    return () => {
+        return(
+            <div>
+                <label>Discount</label>
+                <RestaurantCard/>
+            </div>
+        )}}
+here the withDiscountLabel is a higher order component. it take RestaurantCard as an input and is returning a component/function and a component is basically a function that return a piece of jsx. we have to export the hof. the hof will generate our enhance RestaurantCard. 
+
+restaurant.info.aggregatedDiscountInfoV3 ? (<RestaurantCardDiscounted 
+resData={restaurant}/>) : (<RestaurantCard resData={restaurant}/>)
+
+we have to pass the props that is restaurantData to the withDiscountLabel. we will receive the props in the return(props).
+
+return (props) => {
+        return(
+            <div>
+                <label>Discount</label>
+                <RestaurantCard {...props}/>
+            </div>
+        )
+    }
+the {...props} will take all the props.
+
+part - 2
+
+
+concept.
+controlled and uncontrolled component.
+lifting the state up.
+
+react application has 2 layers that is UI layer and data layer.
+UI layer is powered by data layer(data layer is very important).
+UI layer consist of jsx(code write in jsx).
+data layer is the props, state, local variable, {written something}, all used to modify the data layer.
+
+how to manage data layer ? very important.
+
+now let's make the restaurant menu section.
+1st create the section(ex: recommended, newly added,etc..)
+so we will try to get the itemCategory which is present at @type.
+
+@ is not a valid js. u cannot name a property with @. so to access @type we use a hack that is ["@type"];  
+
+
+NOTE : if not valid js. to access use it like :  ["notValidJs"].
+
+ex: cards.card.["@type"]-----this work why ?
+
+google ["@type"]. why ? 
+
+const categories = resInfo.data.cards[2].groupedCard.cardGroupMap.REGULAR.cards.filter((c)=>c.card?.["card"]?.["@type"] === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory");
+
+accordion : it expand and collapse the menu. 
+it has a header, title and a body. 
+
+now we will loop on the categories. and for each categories we will build an accordion. 
+now we will build a accordion for each category/section. Let's create a RestaurantCategory.js file. 
+{/* categories accordion */}
+{
+categories.map((cardData)=>(<RestaurantCategory data={cardData?.card?.card}/>))
+}
+
+for Accordion body, let's create a new component and let the name be ItemList.js. 
+
+after creating the ItemList. now we have to hide the data inside the Header(RestaurantCategory.js). for that we will create an handler by using onClick. so when we click on the handle click then we should show and hide the data.
+
+now we have to handle the UI layer. the ItemList is the UI layer and the show/hide is the data layer. so we have to work on the data layer. so the data layer has the state variable. let's create a state variable. the state variable will decide whether the ItemList show be shown or not. 
+
+hide/show the data on UI.(default hide)
+    const [showItems, setShowItems] = useState(false); 
+
+accordion work will be done by handlerClick.
+
+open/collapse our accordion logic (toggle feature)
+    const handlerClick = () => {
+        setShowItems(!showItems);
+    }
+
+part - 3
+
+important concept(interview).
+
+if we have open one accordion name recommended, and then open another accordion name newly added then, our previous accordion i.e recommended should be closed/collapse.
+
+if we expand the newly added then our recommended should collapse itself. but the power of collapse is in the hand of showItems(present in RestaurantCategory.js). it is very tough to build this feature because each of this RestaurantCategory have their own state and are managing their own state. managing their own showItems. 
+
+basically, the recommended component is controlling the itemList and the newly added does not aware what is happening inside this recommended component. newly does not know whether recommended is collapse/expand or what-ever. so to build this feature i.e if we expand recommended then all other should be collapse. so we want this state to be lifted up. we don't want to give the power of expand/collapse to this recommended, newly added, etc.. we will give the power of show/hide or expand/collapse to the parent of this child.
+
+rightNow the RestaurantCategory is having the power of expand/collapse. 
+
+// hide/show the data on UI.(default hide)
+    const [showItems, setShowItems] = useState(false); 
+
+    // open/collapse our accordion logic
+    // toggle feature
+    const handlerClick = () => {
+        setShowItems(!showItems);
+    }
+
+we want to give this power to parent of RestaurantCategory i.e RestaurantMenu and not RestaurantCategory. we want our RestaurantMenu to take an input of showItems. whatever we pass in the showItems should be followed. by this way only we can control all the RestaurantCategory. the RestaurantCategory should take the showItems as a props. (very important) here comes the word controlled component and uncontrolled component. so now the RestaurantCategory is controlled component and is controlled by the RestaurantMenu(previously it was uncontrolled component as it was controlled by itself). 
+
+when the RestaurantCategory has it's own state, it's was not controlled. it was controlling itself.
+the parent component i.e RestaurantMenu was not having control on the child component i.e RestaurantCategory.
+
+their is no definition of controlled and uncontrolled. it's a philosophy.
+
+{/* categories accordion */}
+            {
+                // controlled component
+                categories.map((cardData, index)=>(<RestaurantCategory key={cardData.card.card.title} data={cardData?.card?.card} showItems={index === 1 ? true : false}/>))
+            }
+
+at a time only one accordion should be expand and all other collapse. so we can take index as a state. so const [showIndex, setShowIndex] = useState(0). it will open the recommended(present at index 0). 
+
+// index to open accordion
+    const [showIndex, setShowIndex] = useState(2);
+by passing the showIndex to RestaurantCategory to set the state and then the accordion will be trigger.
+
+but now the showIndex variable is in RestaurantMenu.
+we want to do something, like when we click on the arrow or title then that accordion should be expand and other collapse. 
+(very important) so we want to modify the showIndex w.r.to the click of the title/arrow. how can we make the header of the accordion by clicking it should set the showIndex. but the showIndex is in RestaurantMenu(parent) and the header/accordion is in the RestaurantCategory(child). how can we modify the state variable of my parent from my children. it's not possible directly. but we can do it. so we will pass a setShowIndex to the children. in setShowIndex we will be passing a callback fn and it will set the showIndex by using setShowIndex.
+setShowIndex = {()=> setShowIndex(index)}/>
+so the fn will be setting the setShowIndex. so as soon as we click on the accordion/title then we call an onClickHandler and this fn will set the 
+
+important : learn - lifting the state up (react.dev)
+
+
+important tool for debugging - react developer tool.
+go to google chrome store and install the react dev tool.
+after that u have to active the tool and go to the inspect page and their u will see the components , profiler present(given by react dev tool).
+
+profiler - record the react app action. 
+
+part - 4
+
+props drilling concept.
+react has one way data flow(from top to bottom).
+
+let's take an example, suppose we have a const data = "dummy data", present in the RestaurantMenu(parent) and we have to get this data in the itemList(which is the leaf of the RestaurantMenu)
+then we have to pass the data to the RestaurantCategory(child of RestaurantMenu) as a props. the RestaurantCategory is the parent of the itemList(child of RestaurantCategory). In RestaurantCategory we will fetch the data n pass it as a props to the itemList(child). 
+we have to pass the data by an intermediate parent.
+so we r going from parent to child to leaf . we can't directly pass props from parent to leaf. 
+this is called props drilling.  
+
+so just think of a very big react application, which has so many nesting, parent->children->children->children...so on(7-8 level of nesting). suppose u have to pass the data from the parent to the children. will u pass like this. this way is not good. this is also called as props drilling. passing props in react is a problem. without props, component can't exist and without component our react app can't exist. for simple 2-3 nesting of props drilling is okay. but our data is someWhere and we want to access it some where else. then react give us a superPower known as react context. we can avoid props drilling by using react context.
+
+some thing by making global data we can access it. but in 7-8 layer nesting. it is not good. 
+
+example : Login info in our app, gmail, theme(dark,white)
+
+we have some data that will be needed access from anywhere in our app, for that data we will hold it inside a context. the context can be used anywhere in our app. solve props drilling.
+
+google (react context).
+
+IMPORTANT.
+context(central data)
+we will create a UserContext.js file in the utils folder. assume the UserContext is the global kind of object in our react app. 
+react give us an important utility fn that is createContext. 
+const UserContext = createContext({
+    loggedInUser : "Default User",
+});
+to access the context we use react hook. the useContext hook is given by react to access the createContext object. (don't say global object, in interview for createContext data. for understanding u can use it). 
+we can create multiple context.
+
+context hook (assume global object)
+const {loggedInUser} = useContext(UserContext);
+
+we can use this data anywhere and at any level.
+only the data which u are using at multiple places or u feel that u use it in multiple places that is where u will use context.
+important: don't put all the data/information inside the context. example : props. 
+
+can we use loggedInUser i.e context in about.js.  the about.js is a class based component. so we cannot use the useContext hook. how can i access ?
+to access 1st import the UserContext in the about.js file. the react class based, we have a Consumer is given by react. It takes a callback fn and we can do nesting also.
+<UserContext.Consumer>
+{({loggedInUser})=> console.log(loggedInUser)} 
+//{loggedInUser: 'Default User'}
+</UserContext.Consumer>
+we use it like a component. it has a callback fn. in it we extract our loggedInUser object.
+
+UserContext.Consumer>
+{({loggedInUser})=> <h1 className='font-bold'>{loggedInUser}</h1>}
+</UserContext.Consumer>
+
+if we want to have a username present all over the app. then react provide us with Provider. In App.js,
+we wrap our root/appLayout with the UserContext.provider . ex :
+so basically we our override the default value. this is how we modify the UserName. we have wrap the whole appLayout. everywhere our username will be modify. our whole application has the access to the userName. we can also do nesting of Provider
+
+const AppLayout = () =>{
+
+    //set the name in all files
+    const [userName, setUserName] = useState();
+
+    useEffect(()=>{
+        //assume api return data 
+        const data = {
+            name:"adarsh Gupta",
+        }
+        setUserName(data.name);
+},[]);
+
+    return(
+    <UserContext.Provider value={{loggedInUser:userName}}>
+         <div className="app">
+         //Provider nesting it will have the name "Akshay Saini"
+        <UserContext.Provider value={{loggedInUser:"Akshay Saini"}}>
+            <Header/> 
+        </UserContext.Provider>    
+        {/* placeholder or layout template for route-specific component */}
+        <Outlet/>
+        <Footer/>
+    </div>
+        </UserContext.Provider>
+    )
+};
+
+It depend on where u have provided your <UserContext.Provider></UserContext.Provider>. if u don't provide then it will take default value. if u warp the component with the Provider. then the component will take the Provider value. 
+
+another important superPower of UserContext. Let's modify our UserContext by using an input box. 
+So, if we write anything then our UserContext username should be updated with the input box value.
+Now, if u will see in your app.js, we can see that our data is coming from the value.
+<UserContext.Provider value={{loggedInUser:userName}}>
+so the value is used to set the loggedInUser with the username and setUserName is used to set the username. now how can i update this Value ? we can update the value using setUserName. how can i call the setUserName fn from body.js component. we can pass the setUserName to the Body.js. 
+<UserContext.Provider value={{loggedInUser:userName , setUserName}}>
+
+we can extract the setUserName in the body.js component in the same way we have extracted the loggedInUser. 1st we will import the UserContext.
+// import the setUserName fn from the App.js
+const {setUserName} = useContext(UserContext);
+
+we will make an onChange handler on the input box.
+the onChange handler will trigger the setUserName and set the name by using the input box value. 
+
+// import the setUserName fn from the App.js
+const {loggedInUser, setUserName} = useContext(UserContext);
+
+<label>UserName : </label>
+<input className="border border-black p-2" value={loggedInUser} onChange={(e)=> setUserName(e.target.value)}/>
+
+everywhere in our app our loggedInUser if used, will be changed . the cards are rendering on the fly. In about.js page also loggedInUser name is also changed. the about.js is comes from lazy loading. when we load the data on webPage. we don't have the about.js page, but then also our loggedInUser name in about us page is changed by using useContext. the about.js file was not present/loaded then also we can access the loggedInUser name. So think context is a global space and we r trying to update the global place/scope . when this about.js is loaded it fetches the loggedInUser name from the global space/scope and we have update the name to Akash Sharma. 
+It is a way to manage our data. 
+for small/mid application we should use useContext.
+Redux is more preferred over useContext(but use for large application).
+different between useContext and Redux. 
+
+React is made with UI Layer and Data Layer. if your Data Layer is Strong then your UI Layer will be strong.
+
+Completed.. Episode 11

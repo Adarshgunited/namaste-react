@@ -1,0 +1,178 @@
+(Q.1) How do you create Nested Routes react-router-dom configuration?
+To create nested routes with react-router-dom, you nest Route components within each other to define the nested routes.
+
+Example:
+
+jsx code
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+const App = () => {
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/products" component={Products} />
+      </Switch>
+    </Router>
+  );
+};
+
+const Products = () => {
+  return (
+    <div>
+      <h2>Products</h2>
+      <Switch>
+        <Route exact path="/products" component={ProductList} />
+        <Route path="/products/:id" component={ProductDetails} />
+      </Switch>
+    </div>
+  );
+};
+In this example, the Products component defines nested routes within the /products route. The ProductList component will render when the URL is /products, and the ProductDetails component will render when the URL is /products/:id.
+
+
+(Q.2) Read about createHashRouter, createMemoryRouter from React Router docs.
+In React Router, createHashRouter and createMemoryRouter are alternative router implementations provided by the library.
+
+createHashRouter:
+Uses the URL hash portion (#) to keep the UI in sync with the URL.
+Useful for environments where you cannot configure the server to handle URL changes (e.g., static file servers).
+Recommended for supporting older browsers that do not support HTML5 history API.
+Example usage:
+jsx code
+import { createHashRouter } from 'react-router-dom';
+jsx code
+const HashRouter = createHashRouter();
+
+createMemoryRouter:
+Keeps the application's UI in sync with an in-memory history object.
+Useful for testing and server-side rendering (SSR) where there is no browser environment.
+
+Example usage:
+jsx code
+import { createMemoryRouter } from 'react-router-dom';
+
+jsx code
+const MemoryRouter = createMemoryRouter();
+
+Real-world example:
+Suppose you are building a server-rendered React application using Next.js, which does not use the browser's history API. You can use createHashRouter to manage routing in a way that works well with server-side rendering and static file hosting. Additionally, in a testing environment where you want to render components in memory without using a real browser, createMemoryRouter can be beneficial for testing routing behavior without needing a browser environment.
+
+
+(Q.3) What is the order of life cycle method calls in Class Based Components?
+In Class Based Components, the order of lifecycle method calls is as follows:
+
+Mounting Phase:
+
+constructor: Called when an instance of the component is created.
+static getDerivedStateFromProps: Called before rendering when new props or state are received.
+render: Renders the component's UI.
+componentDidMount: Called after the component is mounted to the DOM.
+Updating Phase:
+
+static getDerivedStateFromProps: Called before rendering when new props or state are received.
+shouldComponentUpdate: Determines if the component should re-render.
+render: Renders the component's UI.
+getSnapshotBeforeUpdate: Called right before the changes from the virtual DOM are to be reflected in the DOM.
+componentDidUpdate: Called after the component is updated in the DOM.
+Unmounting Phase:
+
+componentWillUnmount: Called immediately before a component is unmounted and destroyed.
+Real-world example:
+
+Suppose you have a class-based component representing a user profile page. During the mounting phase, the constructor initializes the component, followed by render to display the UI. Once the component is mounted, componentDidMount fetches the user's data from the server. During the updating phase, if the user's data changes, componentDidUpdate may trigger a re-render to update the displayed information. Finally, when the user navigates away from the profile page, componentWillUnmount can perform cleanup tasks, such as cancelling any pending requests or subscriptions.
+
+
+(Q.4) Why do we use componentDidMount?
+
+We use componentDidMount in React class components to perform tasks that require interaction with the DOM or fetching data from an external source after the component has been rendered for the first time.
+
+Explanation:
+componentDidMount is called after the component is mounted to the DOM, making it suitable for actions that need to happen only once when the component is first displayed.
+Common use cases include fetching data from an API, setting up event listeners, initializing third-party libraries, or performing any other initialization logic that depends on the DOM being fully rendered.
+Example:
+In a social media application, you might use componentDidMount to fetch the user's profile information from the server once the profile page is loaded for the first time. This ensures that the profile data is retrieved and displayed to the user after the component has been rendered on the screen.
+
+
+
+(Q.5) Why do we use componentWillUnmount? Show with example.
+
+We use componentWillUnmount in React class components to perform cleanup tasks or unsubscribe from external subscriptions before the component is removed from the DOM.
+
+Explanation:
+componentWillUnmount is called immediately before a component is unmounted and destroyed, providing an opportunity to clean up any resources that were allocated during the component's lifecycle.
+It's commonly used to unsubscribe from event listeners, cancel pending requests, or perform any necessary cleanup to prevent memory leaks or unexpected behavior.
+
+Example:
+In a real-world scenario, consider a chat application where a component is responsible for displaying real-time messages. When the user navigates away from the chat page, you want to stop listening for new messages to avoid unnecessary network requests and conserve resources. Here's how you might use componentWillUnmount for cleanup:
+
+javascript code
+class ChatPage extends React.Component {
+  componentDidMount() {
+    // Start listening for new messages
+    this.startListeningForMessages();
+  }
+
+  componentWillUnmount() {
+    // Stop listening for new messages
+    this.stopListeningForMessages();
+  }
+
+  startListeningForMessages() {
+    // Code to start listening for new messages
+  }
+
+  stopListeningForMessages() {
+    // Code to stop listening for new messages
+  }
+
+  render() {
+    // Render chat UI
+  }
+}
+In this example, componentWillUnmount is used to call stopListeningForMessages() before the component is unmounted, ensuring that resources are properly cleaned up when the user leaves the chat page.
+
+
+(Q.6) (Research) Why do we use super(props) in constructor?
+In React class components, we use super(props) in the constructor to call the constructor of the parent class (i.e., React.Component) and pass props to it.
+
+Explanation:
+super(props) is necessary when defining a constructor in a subclass to ensure that the parent class constructor is called with the correct props.
+It initializes the props passed to the component, making them accessible within the component using this.props.
+
+Example:
+javascript code
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props); // Call the constructor of the parent class (React.Component) and pass props to it
+    // Initialize component state or perform other constructor tasks
+  }
+
+  render() {
+    // Render component UI using this.props
+  }
+}
+In this example, super(props) ensures that props are correctly passed to the parent class constructor, allowing the component to access props using this.props within its methods.
+
+
+(Q.7) (Research) Why can't we have the callback function of useEffect async?
+
+We cannot have the callback function of useEffect marked as async because useEffect itself cannot return a promise, and async functions always return a promise.
+
+Explanation:
+useEffect expects its callback function to be synchronous or return nothing (i.e., undefined).
+Async functions always return a promise, so marking the useEffect callback as async would result in returning a promise, which is not allowed by the useEffect API.
+
+Example:
+javascript code
+useEffect(async () => {
+  // This is not allowed because async functions always return a promise
+  // and useEffect cannot handle promises directly
+  const data = await fetchData();
+  setData(data);
+}, [dependency]);
+In this example, marking the useEffect callback as async is not allowed because useEffect cannot handle the promise returned by the async function. Instead, you should perform asynchronous operations within the callback using traditional promise syntax or by defining an async function within the callback.
+
+
+
+

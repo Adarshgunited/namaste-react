@@ -1,0 +1,118 @@
+Ep-4 part-1
+
+food App developing : 
+
+/*
+header - logo, Nav items,
+body - search input, RestaurantContainer,
+ restaurantContainer - img, name of res, star rating, cuisine,...
+footer - copyright, links, address, contact.
+*/
+
+whenever we build any project, our 1st step is planning. we will plan our food delivery app. how should be our structure and how it should look, should be created ? 
+making the ui structure first. (example : header, nav, body, footer, logo, home, about, search-bar, cart, card, img, rating, etc...)
+
+what component our app should have :
+header - logo, Nav items,
+body - search input, RestaurantContainer,
+footer - copyright, links, address, contact.
+
+in react, the styles are given as an object. see the below example, we can directly write the object as an inline style.
+style = {{backgroundColor:"blue"}}
+
+const styleCard = {backgroundColor:"blue"}
+<div className="res" style={styleCard}></div>
+
+the above styleCard is a js-object.
+
+part-2
+
+let's see how we can make our code dynamic. we will receive data from api(no hard-coded).
+
+Props - properties 
+Props are just normal arguments.
+passing props to a component means passing arguments to a function.
+
+<RestaurantCard resName="Ram foods" cuisine="Idle, South Indian, Asian"/>
+const RestaurantCard (props) =>{}
+the above resName, cuisine is props. it means we r passing props to a component(at the end of the day it means passing arguments to a function). it will be access as props.key name. example : props.resName, props.cuisine.
+
+NOTE : what react do is, it grab all the attributes/properties and create an object as props. we can directly destructure it on the fly and get all the values/attributes. 
+
+NOTE : when we have to dynamically pass data to a component, we pass it as a props.
+
+JS Concept : destructuring
+const RestaurantCard = ({keyName}) =>{}
+we can directly destructure like : const RestaurantCard = ({resName,cuisine}) => {};
+or we can also do in code as : const {resName,cuisine} = props;
+or we can also do in code as : const resName = props.resName, const cuisine = props.cuisine;
+
+HOw does a data come from backend to us ? 
+It comes in a form of Json.(or in any other form also data can come, we should convert it into json.)
+
+config driven UI 
+swiggy uses it. It's a latest practice.
+The data comes from backend and it depend on the config(location, time, etc) and then the backend data is passed and UI is structure with the backend data. different location has different data, time, and UI changes w.r.to config, etc...
+
+IMPORTANT: UI and data layer make frontend App.(they work in synced is very IMPORTANT)
+
+so the resData is the props(key) and the resObj is the argument(real data).
+
+<RestaurantCard resData={resObj}/> 
+means : <RestaurantCard key={real data / js object(argument)}/> 
+
+const RestaurantCard = (props) => {
+    // here the key is resData used to access the real data(resObj)
+    const {resData} = props; 
+}
+The resData key will go to the RestaurantCard component as props.
+
+const array = ["American","Snacks","Biryani"];
+console.log(array.join(", "));
+example : "American, Snacks, Biryani"
+
+<h4>{resData.data.cuisines.join(", ")}</h4>
+output : American, Snacks, Biryani
+
+cloudinaryImageId - cloudinaryImage is a cdn, where swiggy has host/put all images.
+the cdn url will be same but the cloudinaryImage will be different for different images.
+
+In real word, we will get data as array of objects.
+
+always make reusable code (here RestaurantCard)
+
+? - optional chaining...(google it)
+
+<RestaurantCard resData={resList[0]}/>
+<RestaurantCard resData={resList[1]}/>
+<RestaurantCard resData={resList[2]}/>
+<RestaurantCard resData={resList[3]}/>
+
+how can we loop over the array and create the whole card dynamically ? 
+we use map function. we can also use forLoop. but instead of a forLoop, use functional programming. that are map, filter, reduce.
+
+resList.map(restaurant => <RestaurantCard resData={restaurant}/>)
+
+index.js:1 Warning: Each child in a list should have a unique "key" prop.
+Each of the items should be uniquely represented.
+so for each restaurant(child), we should pass an id.
+NOTE : In map function, it is compulsory to write use key as index/id.
+
+resList.map((restaurant) => <RestaurantCard key={restaurant.data.id} resData={restaurant}/>)
+
+we have build a reusable RestaurantCard component dynamically.
+
+be familiar with map, filter, reduce, u will use it a lot in your project.
+
+whenever u r doing a .map or looping, always give a key.(key should be unique)
+why key ?
+if we have a card container, and we have a lot of RestaurantCard at the same level (all are children) and if we have to change a children card then react will do re-render for all children and update, to solve this problem we should pass/give key. so that the react understand which children / RestaurantCard to update / change. it highly optimized our app.
+it affect the performance of app.
+It's okay to use index as a key. some use index as the key. for the sake of argument, u can use index if not present(worst case).
+
+NOTE : react does not  recommend index key should be used.
+
+not using keys (not acceptable) <<< index as key <<< unique id (best practice).
+
+completed episode-4.
+
