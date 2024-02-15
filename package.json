@@ -1,5 +1,5 @@
 {
-  "homepage": "https://Adarshgunited.github.io/food-Project",
+  
   "name": "food-project",
   "version": "1.0.0",
   "description": "Food Project",
@@ -12,8 +12,7 @@
     "watch-test": "jest --watch"
   },
   "repository": {
-    "type": "git",
-    "url": "git remote add origin https://github.com/Adarshgunited/food-Project.git"
+    "type": "git"
   },
   "author": "adarsh gupta",
   "license": "ISC",
