@@ -1,9 +1,12 @@
 {
+  "homepage": "https://Adarshgunited.github.io/food-Project",
   "name": "food-project",
   "version": "1.0.0",
   "description": "Food Project",
   "scripts": {
     "start": "parcel index.html",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "parcel build index.html",
     "test": "jest",
     "watch-test": "jest --watch"
